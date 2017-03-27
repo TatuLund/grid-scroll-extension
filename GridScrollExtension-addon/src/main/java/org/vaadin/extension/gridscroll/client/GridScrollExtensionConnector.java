@@ -8,7 +8,6 @@ import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.Connect;
 

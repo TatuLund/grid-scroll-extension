@@ -1,8 +1,10 @@
 package org.vaadin.extension.demo;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +18,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
@@ -33,23 +34,26 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 @SuppressWarnings("serial")
 public class DemoUI extends UI {
 
-	Grid grid1 = null;
-	Grid grid2 = null;
+	Grid<SimplePojo> grid1 = null;
+	Grid<SimplePojo> grid2 = null;
 
 	public class GridTab1 extends VerticalLayout {
 		GridTab1() {
 			Random random = new Random(4837291937l);
-			BeanItemContainer<SimplePojo> container = new BeanItemContainer<SimplePojo>(
-					SimplePojo.class);
+			List<SimplePojo> data = new ArrayList<>();
 			for (int i = 0; i < 1000; i++) {
-				container.addBean(new SimplePojo(i, "Bean", true, new Date(),
+				data.add(new SimplePojo(i, "Bean", true, new Date(),
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid1 = new Grid(container);
-			grid1.setColumns("description", "stars", "truth", "date", "number");
+			grid1 = new Grid<SimplePojo>();
+			grid1.addColumn(SimplePojo::getDescription);			
+			grid1.addColumn(SimplePojo::getStars);
+			grid1.addColumn(SimplePojo::isTruth);
+			grid1.addColumn(SimplePojo::getDate);
+			grid1.addColumn(SimplePojo::getNumber);
+			grid1.setItems(data);
 			grid1.setSizeFull();
-			grid1.setEditorEnabled(false);
 			setSizeFull();
 			addComponent(grid1);
 			setComponentAlignment(grid1, Alignment.MIDDLE_CENTER);
@@ -60,17 +64,20 @@ public class DemoUI extends UI {
 	public class GridTab2 extends VerticalLayout {
 		GridTab2() {
 			Random random = new Random(4837291937l);
-			BeanItemContainer<SimplePojo> container = new BeanItemContainer<SimplePojo>(
-					SimplePojo.class);
+			List<SimplePojo> data = new ArrayList<>();
 			for (int i = 0; i < 1000; i++) {
-				container.addBean(new SimplePojo(i, "Bean", true, new Date(),
+				data.add(new SimplePojo(i, "Bean", true, new Date(),
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid2 = new Grid(container);
-			grid2.setColumns("description", "stars", "truth", "date", "number");
+			grid2 = new Grid<SimplePojo>();
+			grid2.addColumn(SimplePojo::getDescription);			
+			grid2.addColumn(SimplePojo::getStars);
+			grid2.addColumn(SimplePojo::isTruth);
+			grid2.addColumn(SimplePojo::getDate);
+			grid2.addColumn(SimplePojo::getNumber);
+			grid2.setItems(data);
 			grid2.setSizeFull();
-			grid2.setEditorEnabled(false);
 			setSizeFull();
 			addComponent(grid2);
 			setComponentAlignment(grid2, Alignment.MIDDLE_CENTER);
