@@ -47,8 +47,12 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
-### Version 1.0-SNAPSHOT
-- First version for Vaadin 7
+### Version 2.0.1
+- Fixing issue #2, Server side position was off sync after setPosition(..)
+- Updated demo
+
+### Version 2.0.0
+- First version for Vaadin 8
 
 ## Roadmap
 

@@ -72,6 +72,8 @@ public class GridScrollExtension extends AbstractExtension {
 	 */
 	public void setScrollPosition(int Xposition, int Yposition) {
 		getClientRPC().setScrollPosition(Xposition, Yposition);
+		lastXPosition = Xposition;
+		lastYPosition = Yposition;
 	}
 
 	private GridScrollExtensionClientRPC getClientRPC() {
