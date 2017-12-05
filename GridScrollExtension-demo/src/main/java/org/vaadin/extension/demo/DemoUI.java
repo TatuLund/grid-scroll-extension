@@ -21,9 +21,12 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
@@ -54,10 +57,28 @@ public class DemoUI extends UI {
 			grid1.addColumn(SimplePojo::getNumber);
 			grid1.setItems(data);
 			grid1.setSizeFull();
-			setSizeFull();
-			addComponent(grid1);
-			setComponentAlignment(grid1, Alignment.MIDDLE_CENTER);
+	        GridScrollExtension ext1 = new GridScrollExtension(grid1);
+			VerticalLayout vLayout= new VerticalLayout();
+			vLayout.addComponent(grid1);
+			vLayout.setSizeFull();
+			vLayout.setComponentAlignment(grid1, Alignment.MIDDLE_CENTER);
+			HorizontalLayout hLayout = new HorizontalLayout();
+			TextField field = new TextField("Position");
+			Button saveButton = new Button("Save", event -> {
+				Integer yPos = ext1.getLastYPosition();
+				field.setValue(yPos.toString());
+			});
+			Button gotoButton = new Button("Goto", event -> {
+				Integer newPos = Integer.parseInt(field.getValue());				
+				ext1.setScrollPosition(0, newPos);
+			});
+			hLayout.addComponents(field,gotoButton,saveButton);
+			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
+			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
+			vLayout.addComponent(hLayout);
+			addComponent(vLayout);
 			setMargin(true);
+
 		}
 	}
 
@@ -78,9 +99,26 @@ public class DemoUI extends UI {
 			grid2.addColumn(SimplePojo::getNumber);
 			grid2.setItems(data);
 			grid2.setSizeFull();
-			setSizeFull();
-			addComponent(grid2);
-			setComponentAlignment(grid2, Alignment.MIDDLE_CENTER);
+	        GridScrollExtension ext2 = new GridScrollExtension(grid2);
+			VerticalLayout vLayout= new VerticalLayout();
+			vLayout.addComponent(grid2);
+			vLayout.setSizeFull();
+			vLayout.setComponentAlignment(grid2, Alignment.MIDDLE_CENTER);
+			HorizontalLayout hLayout = new HorizontalLayout();
+			TextField field = new TextField("Position");
+			Button saveButton = new Button("Save", event -> {
+				Integer yPos = ext2.getLastYPosition();
+				field.setValue(yPos.toString());
+			});
+			Button gotoButton = new Button("Goto", event -> {
+				Integer newPos = Integer.parseInt(field.getValue());				
+				ext2.setScrollPosition(0, newPos);
+			});
+			hLayout.addComponents(field,gotoButton,saveButton);
+			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
+			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
+			vLayout.addComponent(hLayout);
+			addComponent(vLayout);
 			setMargin(true);
 		}
 	}
@@ -94,10 +132,7 @@ public class DemoUI extends UI {
         tabSheet.addTab(new GridTab1(), "Grid 1");
         tabSheet.addTab(new GridTab2(), "Grid 2");
         tabSheet.setSizeFull();
-        setContent(tabSheet);
-        
-        GridScrollExtension ext1 = new GridScrollExtension(grid1);
-        GridScrollExtension ext2 = new GridScrollExtension(grid2);        
+        setContent(tabSheet);        
     }
     
   @WebServlet(value = "/*", asyncSupported = true)
