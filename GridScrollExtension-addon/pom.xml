@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.extension</groupId>
 	<artifactId>GridScrollExtension</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>GridScrollExtension Add-on</name>
 
 	<prerequisites>
@@ -29,23 +29,22 @@
 	</properties>
 
 	<organization>
-		<name>Vaadin Community</name>
-		<url>https://github.com/TatuLund/grid-scroll-extension</url>
+		<name>Tatu Lund</name>
+		<url>https://github.com/tatulund/grid-scroll-extension</url>
 	</organization>
 
     <!--
 	<scm>
-		<url>git://github.com/mygithubaccount/MyComponent.git</url>
-		<connection>scm:git:git://github.com/mygithubaccount/MyComponent.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${componentClassName}.git</developerConnection>
-		<tag>MyComponent add-on for Vaadin</tag>
+		<url>git://github.com/tatulund/grid-scroll-extension.git</url>
+		<connection>scm:git:git://github.com/tatulund/grid-scroll-extension.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:/tatulund/${componentClassName}.git</developerConnection>
+		<tag>GridScrollExtension add-on for Vaadin</tag>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/mygithubaccount/MyComponent/issues</url>
+		<url>https://github.com/tatulund/grid-scroll-extension/issues</url>
 	</issueManagement>
-    -->
 
 	<licenses>
 		<license>

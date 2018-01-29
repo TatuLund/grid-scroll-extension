@@ -32,29 +32,31 @@ Note that Eclipse may give "Plugin execution not covered by lifecycle configurat
 
 ### Debugging server-side
 
-If you have not already compiled the widgetset, do it now by running vaadin:install Maven target for ComboBoxOpener-root project.
+If you have not already compiled the widgetset, do it now by running vaadin:install Maven target for GridScrollExtension-root project.
 
-If you have a JRebel license, it makes on the fly code changes faster. Just add JRebel nature to your ComboBoxOpener-demo project by clicking project with right mouse button and choosing JRebel > Add JRebel Nature
+If you have a JRebel license, it makes on the fly code changes faster. Just add JRebel nature to your GridScrollExtension-demo project by clicking project with right mouse button and choosing JRebel > Add JRebel Nature
 
-To debug project and make code modifications on the fly in the server-side, right-click the ComboBoxOpener-demo project and choose Debug As > Debug on Server. Navigate to http://localhost:8080/ComboBoxOpener-demo/ to see the application.
+To debug project and make code modifications on the fly in the server-side, right-click the GridScrollExtension-demo project and choose Debug As > Debug on Server. Navigate to http://localhost:8080 to see the application.
 
 ### Debugging client-side
 
-Debugging client side code in the ComboBoxOpener-demo project:
+Debugging client side code in the GridScrollExtension-demo project:
   - run "mvn vaadin:run-codeserver" on a separate console while the application is running
   - activate Super Dev Mode in the debug window of the application or by adding ?superdevmode to the URL
   - You can access Java-sources and set breakpoints inside Chrome if you enable source maps from inspector settings.
  
 ## Release notes
 
-### Version 1.0-SNAPSHOT
+### Version 1.0.1
+- Backporting fix to issue #2 from 2.0.1: Server side position was off sync after setPosition(..) 
+- Updated the demo
+
+### Version 1.0.0
 - First version for Vaadin 7
 
 ## Roadmap
 
-This component is developed without no public roadmap or any guarantees of upcoming releases. That said, the following features are planned for upcoming releases:
-- Version 2.0 for Vaadin 8
-
+This component is developed without no public roadmap or any guarantees of upcoming releases. Feel free to add improvement ideas to issue tracker.
 
 ## Issue tracking
 
