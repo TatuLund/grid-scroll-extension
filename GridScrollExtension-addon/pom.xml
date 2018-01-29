@@ -33,6 +33,7 @@
 		<url>https://github.com/tatulund/grid-scroll-extension</url>
 	</organization>
 
+    <!--
 	<scm>
 		<url>git://github.com/tatulund/grid-scroll-extension.git</url>
 		<connection>scm:git:git://github.com/tatulund/grid-scroll-extension.git</connection>
