@@ -1,11 +1,14 @@
 package org.vaadin.extension.gridscroll;
 
+import java.util.List;
+
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 // This is the server-side UI component that provides public API 
 // for MyComponent
@@ -13,7 +16,9 @@ import com.vaadin.ui.Grid;
 public class GridScrollExtension extends AbstractExtension {
 	private int lastXPosition;
 	private int lastYPosition;
-
+	private double[] columnWidths;
+	private Grid<?> grid;
+	
 	/**
 	 * Constructor method for the extension
 	 * 
@@ -21,6 +26,7 @@ public class GridScrollExtension extends AbstractExtension {
 	 */	
 	public GridScrollExtension(Grid grid) {
 		this.extend(grid);
+		this.grid = grid;
 		registerRpc(new GridScrollExtensionServerRPC() {
 			@Override
 			public void ping() {
@@ -35,7 +41,61 @@ public class GridScrollExtension extends AbstractExtension {
 					lastYPosition = Yposition;
 				}
 			}
+
+			@Override
+			public void reportColumns(double[] widths) {
+				columnWidths = widths;				
+			}
 		});
+	}
+	
+	/**
+	 * Get actual width of the column by column reference
+	 * Note: There is small delay after Grid has been attached before real widths are available
+	 * 
+	 * @param column The column reference
+	 * @return Actual width of the column in pixels double value
+	 */
+	public double getColumnWidth(Column<?,?> column) {
+		double width = 0;
+		int i = 0;
+		if (columnWidths == null) return -1.0;
+		for (Column<?, ?> col : grid.getColumns()) {
+			if (col == column) width = columnWidths[i];
+			i++;
+		}
+		return width;		
+	}
+	
+	/**
+	 * Get actual width of the column by columnId 
+	 * Note: There is small delay after Grid has been attached before real widths are available
+
+	 * @param columnId Id string / property name of the column
+	 * @return Actual width of the column in pixels double value
+	 */
+	public double getColumnWidth(String columnId) {
+		double width = 0;
+		int i = 0;
+		if (columnWidths == null) return -1.0;
+		for (Column<?, ?> column : grid.getColumns()) {
+			if (column.getId().equals(columnId)) width = columnWidths[i];
+			i++;
+		}
+		return width;
+	}
+
+	/**
+	 * Get actual width of the column by index 
+	 * Note: There is small delay after Grid has been attached before real widths are available
+
+	 * @param i Index of the column
+	 * @return Actual width of the column in pixels double value
+	 */
+	public double getColumnWidth(int i) {
+		if (columnWidths == null) return -1.0;
+		if (i > grid.getColumns().size()) return -1.0;
+		return columnWidths[i];
 	}
 
 	/**

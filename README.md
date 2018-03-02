@@ -47,6 +47,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.1.0
+- Adding getColumnWidth(..) to get actual width of a given column
+
 ### Version 2.0.1
 - Fixing issue #2, Server side position was off sync after setPosition(..)
 - Updated demo
