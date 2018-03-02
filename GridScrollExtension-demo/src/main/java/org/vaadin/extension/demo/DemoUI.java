@@ -77,11 +77,28 @@ public class DemoUI extends UI {
 			Label widthsLabel = new Label();
 			Button columnButton = new Button("Columns", event -> {
 				String widths = "Column widths:";
+				Double width = 0.0;
 				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
 					widths = widths + " "+ ext1.getColumnWidth(col);
+					width = width + ext1.getColumnWidth(col);
 				}
 				widthsLabel.setValue(widths);
+				int total = width.intValue()+16;
+				grid1.setWidth(total+"px");
 			});
+
+//			This is not working since RPC call with new column widths after
+//			the event is dispatched
+			
+//			grid1.addColumnResizeListener(event -> {
+//				Double width = 0.0;
+//				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
+//					width = width + ext1.getColumnWidth(col);
+//				}
+//				int total = width.intValue()+16;				
+//				grid1.setWidth(total+"px");
+//			});
+
 			hLayout.addComponents(field,gotoButton,saveButton,columnButton,widthsLabel);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
