@@ -3,6 +3,7 @@ package org.vaadin.extension.gridscroll.client;
 import org.vaadin.extension.gridscroll.GridScrollExtension;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
+import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -72,6 +73,11 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 			public void onColumnResize(ColumnResizeEvent event) {
 				double[] widths = getColumnWidths();
 				getServerRPC().reportColumns(widths);
+				if (getState().autoResizeWidth) {
+					Double width = 0d;
+					for (int i=0;i<widths.length;i++) width = width + widths[i];
+					grid.setWidth(width.intValue()+16.5+"px");
+				}
 			}
 
 		});
@@ -113,6 +119,10 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		return getRpcProxy(GridScrollExtensionServerRPC.class);
 	}
 	
+	@Override
+    public GridScrollExtensionState getState() {
+        return ((GridScrollExtensionState) super.getState());
+    }
 	
 	
 }

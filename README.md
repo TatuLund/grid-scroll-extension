@@ -47,6 +47,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.1.1
+- Adding setAutoResizeWidth(..) for Grid to automatically adjust width according to column widths.
+
 ### Version 2.1.0
 - Adding getColumnWidth(..) to get actual width of a given column
 

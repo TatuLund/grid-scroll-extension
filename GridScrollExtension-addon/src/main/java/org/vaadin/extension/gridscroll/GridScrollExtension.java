@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
+import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.ui.ComboBox;
@@ -139,4 +140,20 @@ public class GridScrollExtension extends AbstractExtension {
 	private GridScrollExtensionClientRPC getClientRPC() {
 		return getRpcProxy(GridScrollExtensionClientRPC.class);
 	}
+
+	/**
+	 * Set Grid to resize itself according to column widths automatically
+	 * 
+	 * @param autoResizeWidth If true Grid resizes itself to column widths 
+	 */
+	public void setAutoResizeWidth(boolean autoResizeWidth) {
+		getState().autoResizeWidth = autoResizeWidth;
+	}
+	
+    @Override
+    public GridScrollExtensionState getState() {
+        return (GridScrollExtensionState) super.getState();
+    }
+
+
 }
