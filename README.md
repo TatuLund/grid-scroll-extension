@@ -47,6 +47,10 @@ Debugging client side code in the GridScrollExtension-demo project:
  
 ## Release notes
 
+### Version 1.1.1
+- Added getColumnWidth(..) to get actual width of given column
+- Added setAutoResizeWidth(..) to Grid automatically adjust width according to column widths.
+
 ### Version 1.0.1
 - Backporting fix to issue #2 from 2.0.1: Server side position was off sync after setPosition(..) 
 - Updated the demo

@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.extension</groupId>
 	<artifactId>GridScrollExtension</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1</version>
+	<version>1.1.1</version>
 	<name>GridScrollExtension Add-on</name>
 
 	<prerequisites>
@@ -14,8 +14,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 		<vaadin.version>7.7.6</vaadin.version>
 		<vaadin.plugin.version>7.7.6</vaadin.plugin.version>
 
@@ -33,7 +33,6 @@
 		<url>https://github.com/tatulund/grid-scroll-extension</url>
 	</organization>
 
-    <!--
 	<scm>
 		<url>git://github.com/tatulund/grid-scroll-extension.git</url>
 		<connection>scm:git:git://github.com/tatulund/grid-scroll-extension.git</connection>
@@ -74,7 +73,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- This can be replaced with TestNG or some other test framework supported by the surefire plugin -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

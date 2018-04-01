@@ -18,7 +18,9 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -63,9 +65,21 @@ public class DemoUI extends UI {
 				Integer newPos = Integer.parseInt(field.getValue());				
 				ext1.setScrollPosition(0, newPos);
 			});
-			hLayout.addComponents(field,gotoButton,saveButton);
+			Label widthsLabel = new Label();
+			Button columnButton = new Button("Columns", event -> {
+				String widths = "Column widths:";
+				for (Column col : grid1.getColumns()) {
+					widths = widths + " "+ ext1.getColumnWidth(col);
+				}
+				widthsLabel.setValue(widths);
+			});
+
+			ext1.setAutoResizeWidth(true);			
+			hLayout.addComponents(field,gotoButton,saveButton,columnButton,widthsLabel);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
+			hLayout.setComponentAlignment(columnButton, Alignment.BOTTOM_LEFT);
+			hLayout.setComponentAlignment(widthsLabel, Alignment.BOTTOM_LEFT);
 			vLayout.addComponent(hLayout);
 			addComponent(vLayout);
 			setMargin(true);
