@@ -1,13 +1,10 @@
 package org.vaadin.extension.gridscroll;
 
-import java.util.List;
-
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
 
 import com.vaadin.server.AbstractExtension;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 
@@ -19,6 +16,8 @@ public class GridScrollExtension extends AbstractExtension {
 	private int lastYPosition;
 	private double[] columnWidths;
 	private Grid<?> grid;
+	private int lastWidth;
+	private int lastHeight;
 	
 	/**
 	 * Constructor method for the extension
@@ -47,6 +46,17 @@ public class GridScrollExtension extends AbstractExtension {
 			public void reportColumns(double[] widths) {
 				columnWidths = widths;				
 			}
+
+			@Override
+			public void reportSize(int width, int height) {
+				lastWidth = width;
+				lastHeight = height;			
+			}
+
+			@Override
+			public void gridInitialColumnWidthsCalculated() {
+				System.out.println("Initial column widths calculated");				
+			}
 		});
 	}
 	
@@ -57,10 +67,21 @@ public class GridScrollExtension extends AbstractExtension {
 	 * @param column The column reference
 	 * @return Actual width of the column in pixels double value
 	 */
-	public double getColumnWidth(Column<?,?> column) {
+	public double getColumnWidth(Column<?,?> column, boolean wait) {
 		double width = 0;
 		int i = 0;
-		if (columnWidths == null) return -1.0;
+		if (!wait && columnWidths == null) return -1.0;
+		else {
+			do {
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} while (columnWidths == null);
+					
+		}
 		for (Column<?, ?> col : grid.getColumns()) {
 			if (col == column) width = columnWidths[i];
 			i++;
@@ -125,6 +146,14 @@ public class GridScrollExtension extends AbstractExtension {
 		return lastYPosition;
 	}
 
+	public int getWidth() {
+		return lastWidth;
+	}
+	
+	public int getHeight() {
+		return lastHeight;
+	}
+	
 	/**
 	 * Set new scroll position in pixels and scroll grid to that position
 	 * 

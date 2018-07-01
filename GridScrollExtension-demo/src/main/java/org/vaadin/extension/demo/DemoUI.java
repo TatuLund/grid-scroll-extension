@@ -22,6 +22,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.HorizontalLayout;
@@ -39,10 +40,10 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 @SuppressWarnings("serial")
 public class DemoUI extends UI {
 
-	Grid<SimplePojo> grid1 = null;
-	Grid<SimplePojo> grid2 = null;
-
 	public class GridTab1 extends VerticalLayout {
+		private Grid<SimplePojo> grid1 = new Grid<>();
+        private GridScrollExtension ext1 = new GridScrollExtension(grid1);
+
 		GridTab1() {
 			Random random = new Random(4837291937l);
 			List<SimplePojo> data = new ArrayList<>();
@@ -51,7 +52,6 @@ public class DemoUI extends UI {
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid1 = new Grid<SimplePojo>();
 			grid1.addColumn(SimplePojo::getDescription);			
 			grid1.addColumn(SimplePojo::getStars);
 			grid1.addColumn(SimplePojo::isTruth);
@@ -59,13 +59,18 @@ public class DemoUI extends UI {
 			grid1.addColumn(SimplePojo::getNumber);
 			grid1.setItems(data);
 			grid1.setSizeFull();
-	        GridScrollExtension ext1 = new GridScrollExtension(grid1);
 			VerticalLayout vLayout= new VerticalLayout();
 			vLayout.addComponent(grid1);
 			vLayout.setSizeFull();
 			vLayout.setComponentAlignment(grid1, Alignment.MIDDLE_CENTER);
 			HorizontalLayout hLayout = new HorizontalLayout();
 			TextField field = new TextField("Position");
+			field.addBlurListener(event -> {
+				System.out.println("Blur fired!");
+			});
+			field.addFocusListener(event -> {
+				System.out.println("Focus fired!");
+			});
 			Button saveButton = new Button("Save", event -> {
 				Integer yPos = ext1.getLastYPosition();
 				field.setValue(yPos.toString());
@@ -75,27 +80,31 @@ public class DemoUI extends UI {
 				ext1.setScrollPosition(0, newPos);
 			});
 			Label widthsLabel = new Label();
+			Label sizeLabel = new Label("Width: "+ext1.getWidth()+", Height: "+ext1.getHeight());
 			Button columnButton = new Button("Columns", event -> {
 				String widths = "Column widths:";
 				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
-					widths = widths + " "+ ext1.getColumnWidth(col);
+					widths = widths + " "+ ext1.getColumnWidth(col,false);
 				}
 				widthsLabel.setValue(widths);
+				sizeLabel.setValue("Width: "+ext1.getWidth()+", Height: "+ext1.getHeight());
 			});
-
+			
 			ext1.setAutoResizeWidth(true);
 			
-			hLayout.addComponents(field,gotoButton,saveButton,columnButton,widthsLabel);
+			hLayout.addComponents(field,gotoButton,saveButton,columnButton,widthsLabel,sizeLabel);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
 			vLayout.addComponent(hLayout);
 			addComponent(vLayout);
-			setMargin(true);
-
+			setMargin(true);			
 		}
 	}
 
 	public class GridTab2 extends VerticalLayout {
+		private Grid<SimplePojo> grid2 = new Grid<>();
+        private GridScrollExtension ext2 = new GridScrollExtension(grid2);
+
 		GridTab2() {
 			Random random = new Random(4837291937l);
 			List<SimplePojo> data = new ArrayList<>();
@@ -104,7 +113,6 @@ public class DemoUI extends UI {
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid2 = new Grid<SimplePojo>();
 			grid2.addColumn(SimplePojo::getDescription);			
 			grid2.addColumn(SimplePojo::getStars);
 			grid2.addColumn(SimplePojo::isTruth);
@@ -112,7 +120,6 @@ public class DemoUI extends UI {
 			grid2.addColumn(SimplePojo::getNumber);
 			grid2.setItems(data);
 			grid2.setSizeFull();
-	        GridScrollExtension ext2 = new GridScrollExtension(grid2);
 			VerticalLayout vLayout= new VerticalLayout();
 			vLayout.addComponent(grid2);
 			vLayout.setSizeFull();

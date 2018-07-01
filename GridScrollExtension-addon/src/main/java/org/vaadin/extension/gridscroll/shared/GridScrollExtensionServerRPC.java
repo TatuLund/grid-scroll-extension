@@ -11,4 +11,8 @@ public interface GridScrollExtensionServerRPC extends ServerRpc {
 	void reportPosition(int x, int y);
 	
 	void reportColumns(double[] widths);
+	
+	void gridInitialColumnWidthsCalculated(); 
+	
+	void reportSize(int width, int height);
 }
