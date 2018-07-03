@@ -1,12 +1,20 @@
 package org.vaadin.extension.gridscroll;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
 
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.util.ReflectTools;
 
 // This is the server-side UI component that provides public API 
 // for MyComponent
@@ -18,6 +26,30 @@ public class GridScrollExtension extends AbstractExtension {
 	private Grid<?> grid;
 	private int lastWidth;
 	private int lastHeight;
+	
+	public interface GridScrolledListener extends ConnectorEventListener {
+		Method GRID_SCROLLED_METHOD = ReflectTools.findMethod(
+				GridScrolledListener.class, "gridScrolled", GridScrolledEvent.class);
+		public void gridScrolled(GridScrolledEvent event);
+	}
+	
+	public interface GridRenderedListener extends ConnectorEventListener {
+		Method GRID_RENDERED_METHOD = ReflectTools.findMethod(
+				GridRenderedListener.class, "gridRendered", GridRenderedEvent.class);
+		public void gridRendered(GridRenderedEvent event);
+	}
+	
+	public interface GridResizedListener extends ConnectorEventListener {
+		Method GRID_RESIZED_METHOD = ReflectTools.findMethod(
+				GridResizedListener.class, "gridResized", GridResizedEvent.class);
+		public void gridResized(GridResizedEvent event);
+	}
+	
+	public interface GridColumnsResizedListener extends ConnectorEventListener {
+		Method GRID_COLUMNS_RESIZED_METHOD = ReflectTools.findMethod(
+				GridColumnsResizedListener.class, "gridColumnsResized", GridColumnsResizedEvent.class);
+		public void gridColumnsResized(GridColumnsResizedEvent event);
+	}
 	
 	/**
 	 * Constructor method for the extension
@@ -39,25 +71,73 @@ public class GridScrollExtension extends AbstractExtension {
 				} else {
 					lastXPosition = Xposition;
 					lastYPosition = Yposition;
+					fireEvent(new GridScrolledEvent(grid));
 				}
 			}
 
 			@Override
 			public void reportColumns(double[] widths) {
 				columnWidths = widths;				
+				fireEvent(new GridColumnsResizedEvent(grid));
 			}
 
 			@Override
 			public void reportSize(int width, int height) {
 				lastWidth = width;
-				lastHeight = height;			
+				lastHeight = height;
+				fireEvent(new GridResizedEvent(grid));
 			}
 
 			@Override
 			public void gridInitialColumnWidthsCalculated() {
-				System.out.println("Initial column widths calculated");				
+				fireEvent(new GridRenderedEvent(grid)); 
 			}
 		});
+	}
+	
+	
+	/**
+	 * Add a new GridRenderedListener
+	 * The GridRenderedEvent event is fired once after Grid's initial column width calculation is complete
+	 * 
+	 * @param listener A GridRenderedListener to be added
+	 */
+	public Registration addGridRenderedListener(GridRenderedListener listener) {
+		return addListener(GridRenderedEvent.class, listener, GridRenderedListener.GRID_RENDERED_METHOD);
+	}
+	
+	/**
+	 * Add a new GridResizedListener
+	 * The GridResizedEvent event is fired every time Grid size has been changed 
+	 * when GridScrollExtension.setAutoResizeWidth(true) has been applied
+	 * 
+	 * @param listener A GridResizedListener to be added
+	 */
+	public Registration addGridResizedListener(GridResizedListener listener) {
+		return addListener(GridResizedEvent.class, listener, GridResizedListener.GRID_RESIZED_METHOD);
+	}
+
+	/**
+	 * Add a new GridColumnsResizedListener
+	 * The GridColumnsResizedEvent event is fired every time Grid column sizes has been changed
+	 * 
+	 * Note, there is similar event in Grid, but that is fired before you can fetch real column widths, this
+	 * event is fired after widths are available, hence you can get correct widths
+	 * 
+	 * @param listener A GridColumnsResizedListener to be added
+	 */
+	public Registration addGridColumnsResizedListener(GridColumnsResizedListener listener) {
+		return addListener(GridColumnsResizedEvent.class, listener, GridColumnsResizedListener.GRID_COLUMNS_RESIZED_METHOD);
+	}
+	
+	/**
+	 * Add a new GridScrolledListener
+	 * The GridScrolledEvent event is fired when Grid scroll position changes
+	 *  
+	 * @param listener A GridScrolledListener to be added
+	 */
+	public Registration addGridScrolledListener(GridScrolledListener listener) {
+		return addListener(GridScrolledEvent.class, listener, GridScrolledListener.GRID_SCROLLED_METHOD);
 	}
 	
 	/**

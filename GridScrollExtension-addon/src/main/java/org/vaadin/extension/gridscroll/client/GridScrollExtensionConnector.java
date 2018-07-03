@@ -43,6 +43,13 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		}
 		return hasWidths;
 	}
+
+	private void adjustGridWidth(double[] widths) {
+		Double width = 0d;
+		for (int i=0;i<widths.length;i++) width = width + widths[i];
+		grid.setWidth(width.intValue()+16.5+"px");
+	}
+
 	
 	@Override
 	protected void extend(ServerConnector target) {
@@ -61,6 +68,9 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 							if (hasWidths(widths)) {
 								getServerRPC().reportColumns(widths);							
 								getServerRPC().gridInitialColumnWidthsCalculated();
+								if (getState().autoResizeWidth) {
+									adjustGridWidth(widths);
+								}
 								return false;
 							}
 							else return true;
@@ -89,10 +99,8 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 				double[] widths = getColumnWidths();
 				getServerRPC().reportColumns(widths);
 				if (getState().autoResizeWidth) {
-					Double width = 0d;
-					for (int i=0;i<widths.length;i++) width = width + widths[i];
-					grid.setWidth(width.intValue()+16.5+"px");
 					getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
+					adjustGridWidth(widths);
 				}
 			}
 

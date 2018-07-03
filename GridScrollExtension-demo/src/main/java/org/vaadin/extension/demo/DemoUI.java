@@ -2,12 +2,9 @@ package org.vaadin.extension.demo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -17,22 +14,18 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 
 @Push
 @Theme("demo")
@@ -91,6 +84,32 @@ public class DemoUI extends UI {
 			});
 			
 			ext1.setAutoResizeWidth(true);
+			
+			ext1.addGridRenderedListener(event -> {
+				String widths = "Column widths:";
+				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
+					widths = widths + " "+ ext1.getColumnWidth(col,false);
+				}
+				widthsLabel.setValue(widths);				
+				sizeLabel.setValue("Width: "+ext1.getWidth()+", Height: "+ext1.getHeight());
+			});
+			
+			ext1.addGridResizedListener(event -> {
+				sizeLabel.setValue("Width: "+ext1.getWidth()+", Height: "+ext1.getHeight());				
+			});
+
+			ext1.addGridScrolledListener(event -> {
+				Integer yPos = ext1.getLastYPosition();
+				field.setValue(yPos.toString());
+			});
+
+			ext1.addGridColumnsResizedListener(event -> {
+				String widths = "Column widths:";
+				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
+					widths = widths + " "+ ext1.getColumnWidth(col,false);
+				}
+				widthsLabel.setValue(widths);				
+			});
 			
 			hLayout.addComponents(field,gotoButton,saveButton,columnButton,widthsLabel,sizeLabel);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
