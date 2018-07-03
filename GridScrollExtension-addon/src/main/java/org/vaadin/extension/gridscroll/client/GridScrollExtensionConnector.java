@@ -7,6 +7,8 @@ import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ComponentConnector;
@@ -36,6 +38,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		return widths;
 	}
 	
+	// Check if widths has been calculated
 	private boolean hasWidths(double[] widths) {
 		boolean hasWidths = true;
 		for (int i=0;i<grid.getVisibleColumns().size();i++) {
@@ -44,12 +47,36 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		return hasWidths;
 	}
 
+	// Sets the width of Grid to be sum of widths
 	private void adjustGridWidth(double[] widths) {
 		Double width = 0d;
 		for (int i=0;i<widths.length;i++) width = width + widths[i];
-		grid.setWidth(width.intValue()+16.5+"px");
+		// Add the scroll bar width if it exists 
+		Double totalWidth = width + 0.5;
+		Double scrollerWidth = getVerticalScrollBarWidth();
+		if (scrollerWidth > 0.0) totalWidth = totalWidth + scrollerWidth; 
+		grid.setWidth(totalWidth.intValue()+"px");
 	}
 
+	// Return -1.0 if Grid has no vertical scroll bar otherwise its width
+	private double getVerticalScrollBarWidth() {
+		for (Element e : getGridParts("div")) {
+			if (e.getClassName().contains("v-grid-scroller-vertical")) {				
+				return e.getOffsetWidth();
+			}
+		}
+		return -1.0;
+	}
+	
+	// Get elements in Grid by tag name
+	private Element[] getGridParts(String elem) {
+		NodeList<Element> elems = grid.getElement().getElementsByTagName(elem);
+		Element[] ary = new Element[elems.getLength()];
+		for (int i = 0; i < ary.length; ++i) {
+			ary[i] = elems.getItem(i);
+		}
+		return ary;
+	}
 	
 	@Override
 	protected void extend(ServerConnector target) {
