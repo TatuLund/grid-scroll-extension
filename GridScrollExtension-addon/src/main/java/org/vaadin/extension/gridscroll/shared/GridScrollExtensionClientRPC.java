@@ -6,4 +6,6 @@ public interface GridScrollExtensionClientRPC extends ClientRpc {
 
 	public void setScrollPosition(int x, int y);
 	
+	public void recalculateGridWidth();
+	
 }

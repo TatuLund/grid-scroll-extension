@@ -47,6 +47,13 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.2.0
+- Adding events: GridRenderedEvent, GridResizedEvent, GridScrolledEvent and GridColumnsResizedEvent
+- Added adjustGridWidth() API to force Grid resize according to column widths
+- Added getWidth(), getHeight() get actual width and height of Grid (see issue #4)
+- Fixed a bug: Extension did not work with hidden columns properly
+- Fixed a bug: Vertical scroll bar adjustment was not correctly implemented 
+
 ### Version 2.1.1
 - Adding setAutoResizeWidth(..) for Grid to automatically adjust width according to column widths.
 

@@ -5,6 +5,8 @@ import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -116,6 +118,19 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 						grid.setScrollTop(y);
 						xscroll = x;
 						yscroll = y;
+					}
+
+					@Override
+					public void recalculateGridWidth() {
+						AnimationCallback adjustCallback = new AnimationCallback() {
+				            @Override
+				            public void execute(double timestamp) {
+				            	double[] widths = getColumnWidths();
+								adjustGridWidth(widths);
+								getServerRPC().reportColumns(widths);
+				            }
+						};
+						AnimationScheduler.get().requestAnimationFrame(adjustCallback);
 					}
 		});
 		

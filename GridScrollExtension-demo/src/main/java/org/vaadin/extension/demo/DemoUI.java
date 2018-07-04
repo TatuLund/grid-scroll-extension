@@ -77,10 +77,15 @@ public class DemoUI extends UI {
 			Button columnButton = new Button("Columns", event -> {
 				String widths = "Column widths:";
 				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
-					widths = widths + " "+ ext1.getColumnWidth(col,false);
+					widths = widths + " "+ ext1.getColumnWidth(col);
 				}
 				widthsLabel.setValue(widths);
 				sizeLabel.setValue("Width: "+ext1.getWidth()+", Height: "+ext1.getHeight());
+			});
+			
+			Button resetButton = new Button("Reset", event -> {
+				for (Column col : grid1.getColumns()) col.setWidth(200.0d);
+				ext1.adjustGridWidth();
 			});
 			
 			ext1.setAutoResizeWidth(true);
@@ -88,7 +93,7 @@ public class DemoUI extends UI {
 			ext1.addGridRenderedListener(event -> {
 				String widths = "Column widths:";
 				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
-					widths = widths + " "+ ext1.getColumnWidth(col,false);
+					widths = widths + " "+ ext1.getColumnWidth(col);
 				}
 				widthsLabel.setValue(widths);				
 				sizeLabel.setValue("Width: "+ext1.getWidth()+", Height: "+ext1.getHeight());
@@ -106,12 +111,12 @@ public class DemoUI extends UI {
 			ext1.addGridColumnsResizedListener(event -> {
 				String widths = "Column widths:";
 				for (Column<SimplePojo, ?> col : grid1.getColumns()) {
-					widths = widths + " "+ ext1.getColumnWidth(col,false);
+					widths = widths + " "+ ext1.getColumnWidth(col);
 				}
 				widthsLabel.setValue(widths);				
 			});
 			
-			hLayout.addComponents(field,gotoButton,saveButton,columnButton,widthsLabel,sizeLabel);
+			hLayout.addComponents(field,gotoButton,saveButton,columnButton,resetButton,widthsLabel,sizeLabel);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
 			vLayout.addComponent(hLayout);

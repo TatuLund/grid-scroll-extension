@@ -140,6 +140,17 @@ public class GridScrollExtension extends AbstractExtension {
 		return addListener(GridScrolledEvent.class, listener, GridScrolledListener.GRID_SCROLLED_METHOD);
 	}
 	
+	
+	/**
+	 * Recalculate the Grid's width and adjust it to according to actual column widths
+	 * 
+	 * Programmatic change of column widths do not trigger column resize event, hence you
+	 * need to call this if you want to refit Grid 
+	 */
+	public void adjustGridWidth() {
+		getClientRPC().recalculateGridWidth();		
+	}
+	
 	/**
 	 * Get actual width of the column by column reference
 	 * Note: There is small delay after Grid has been attached before real widths are available
@@ -147,21 +158,10 @@ public class GridScrollExtension extends AbstractExtension {
 	 * @param column The column reference
 	 * @return Actual width of the column in pixels double value
 	 */
-	public double getColumnWidth(Column<?,?> column, boolean wait) {
+	public double getColumnWidth(Column<?,?> column) {
 		double width = 0;
 		int i = 0;
-		if (!wait && columnWidths == null) return -1.0;
-		else {
-			do {
-				try {
-					Thread.sleep(250);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} while (columnWidths == null);
-					
-		}
+		if (columnWidths == null) return -1.0;
 		for (Column<?, ?> col : grid.getColumns()) {
 			if (col == column) width = columnWidths[i];
 			i++;
