@@ -47,6 +47,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.2.1
+- Added workaround for Grid getting resized after sorting issue
+
 ### Version 2.2.0
 - Adding events: GridRenderedEvent, GridResizedEvent, GridScrolledEvent and GridColumnsResizedEvent
 - Added adjustGridWidth() API to force Grid resize according to column widths

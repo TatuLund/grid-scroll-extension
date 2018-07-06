@@ -84,28 +84,24 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 	protected void extend(ServerConnector target) {
 		grid = (Grid<?>)((ComponentConnector)target).getWidget();
 
-		grid.addAttachHandler(new AttachEvent.Handler() {
-
-			@Override
-			public void onAttachOrDetach(AttachEvent event) {
-				if (event.isAttached()) {
-					getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
-					Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-						@Override
-						public boolean execute() {
-							double[] widths = getColumnWidths();
-							if (hasWidths(widths)) {
-								getServerRPC().reportColumns(widths);							
-								getServerRPC().gridInitialColumnWidthsCalculated();
-								if (getState().autoResizeWidth) {
-									adjustGridWidth(widths);
-								}
-								return false;
+		grid.addAttachHandler(event -> {
+			if (event.isAttached()) {
+				getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
+				Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+					@Override
+					public boolean execute() {
+						double[] widths = getColumnWidths();
+						if (hasWidths(widths)) {
+							getServerRPC().reportColumns(widths);							
+							getServerRPC().gridInitialColumnWidthsCalculated();
+							if (getState().autoResizeWidth) {
+								adjustGridWidth(widths);
 							}
-							else return true;
+							return false;
 						}
-					}, 100);
-				}			
+						else return true;
+					}
+				}, 100);
 			}
 		});
 		
@@ -134,18 +130,25 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 					}
 		});
 		
-		grid.addColumnResizeHandler(new ColumnResizeHandler() {
-
-			@Override
-			public void onColumnResize(ColumnResizeEvent event) {
-				double[] widths = getColumnWidths();
-				getServerRPC().reportColumns(widths);
-				if (getState().autoResizeWidth) {
-					getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
+		// For some odd reason sorting resets Grid size, which may be bug in Grid, this is workaround
+		grid.addSortHandler(event -> {
+			AnimationCallback adjustCallback = new AnimationCallback() {
+	            @Override
+	            public void execute(double timestamp) {
+	            	double[] widths = getColumnWidths();
 					adjustGridWidth(widths);
-				}
+	            }
+			};
+			AnimationScheduler.get().requestAnimationFrame(adjustCallback);
+		});
+		
+		grid.addColumnResizeHandler(event -> {
+			double[] widths = getColumnWidths();
+			getServerRPC().reportColumns(widths);
+			if (getState().autoResizeWidth) {
+				getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
+				adjustGridWidth(widths);
 			}
-
 		});
 		
 		t = new Timer() {
