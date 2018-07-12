@@ -47,6 +47,10 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.2.2
+- Fix: Size adjustment after sorting should be applied only when setAutoResizeWidth(true) 
+- Fix: Scroll bar adjustment needs to be handled differently on IE11/Edge 
+
 ### Version 2.2.1
 - Added workaround for Grid getting resized after sorting issue
 

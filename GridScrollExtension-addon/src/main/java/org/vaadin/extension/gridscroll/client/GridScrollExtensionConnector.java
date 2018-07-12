@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.Timer;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -63,8 +64,12 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 	// Return -1.0 if Grid has no vertical scroll bar otherwise its width
 	private double getVerticalScrollBarWidth() {
 		for (Element e : getGridParts("div")) {
-			if (e.getClassName().contains("v-grid-scroller-vertical")) {				
-				return e.getOffsetWidth();
+			if (e.getClassName().contains("v-grid-scroller-vertical")) {
+				if (BrowserInfo.get().isIE11() || BrowserInfo.get().isEdge()) { 
+					return e.getClientWidth();
+				} else {
+					return e.getOffsetWidth();					
+				}
 			}
 		}
 		return -1.0;
@@ -139,7 +144,9 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 					adjustGridWidth(widths);
 	            }
 			};
-			AnimationScheduler.get().requestAnimationFrame(adjustCallback);
+			if (getState().autoResizeWidth) {
+				AnimationScheduler.get().requestAnimationFrame(adjustCallback);
+			}
 		});
 		
 		grid.addColumnResizeHandler(event -> {
