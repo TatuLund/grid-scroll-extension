@@ -47,6 +47,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.3.0
+- Added ColumnResizeCompensationMode to choose between resizing Grid and resizing last column to compensate resizing of columns. 
+
 ### Version 2.2.2
 - Fix: Size adjustment after sorting should be applied only when setAutoResizeWidth(true) 
 - Fix: Scroll bar adjustment needs to be handled differently on IE11/Edge 

@@ -4,6 +4,5 @@ import com.vaadin.shared.communication.SharedState;
 
 public class GridScrollExtensionState extends SharedState {
 
-	public boolean autoResizeWidth = false;
-	
+	public ColumnResizeCompensationMode compensationMode = ColumnResizeCompensationMode.NONE;
 }

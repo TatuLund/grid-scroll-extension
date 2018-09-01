@@ -8,4 +8,6 @@ public interface GridScrollExtensionClientRPC extends ClientRpc {
 	
 	public void recalculateGridWidth();
 	
+	public void adjustLastColumn();
+	
 }

@@ -1,6 +1,7 @@
 package org.vaadin.extension.gridscroll.client;
 
 import org.vaadin.extension.gridscroll.GridScrollExtension;
+import org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
@@ -61,6 +62,22 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		grid.setWidth(totalWidth.intValue()+"px");
 	}
 
+	// Sets the width of the last Column of the Grid to fit remaining space of Grid
+	// provided that there is space left
+	private void adjustLastColumnWidth(double[] widths) {
+		Double width = 0d;
+		for (int i=0;i<widths.length-1;i++) width = width + widths[i];
+		// Add the scroll bar width if it exists 
+		Double totalWidth = width + 0.5;
+		Double scrollerWidth = getVerticalScrollBarWidth();
+		if (scrollerWidth > 0.0) totalWidth = totalWidth + scrollerWidth; 
+		Double gridWidth = (double) grid.getOffsetWidth();
+		if (totalWidth < gridWidth) {
+			Double targetWidth = gridWidth - totalWidth; 
+			grid.getVisibleColumns().get(grid.getVisibleColumns().size()-1).setWidth(targetWidth);
+		}
+	}
+	
 	// Return -1.0 if Grid has no vertical scroll bar otherwise its width
 	private double getVerticalScrollBarWidth() {
 		for (Element e : getGridParts("div")) {
@@ -99,7 +116,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 						if (hasWidths(widths)) {
 							getServerRPC().reportColumns(widths);							
 							getServerRPC().gridInitialColumnWidthsCalculated();
-							if (getState().autoResizeWidth) {
+							if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) {
 								adjustGridWidth(widths);
 							}
 							return false;
@@ -133,6 +150,18 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 						};
 						AnimationScheduler.get().requestAnimationFrame(adjustCallback);
 					}
+
+					@Override
+					public void adjustLastColumn() {
+						AnimationCallback adjustCallback = new AnimationCallback() {
+				            @Override
+				            public void execute(double timestamp) {
+				            	double[] widths = getColumnWidths();
+								adjustLastColumnWidth(widths);
+				            }
+						};
+						AnimationScheduler.get().requestAnimationFrame(adjustCallback);
+					}
 		});
 		
 		// For some odd reason sorting resets Grid size, which may be bug in Grid, this is workaround
@@ -141,10 +170,11 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 	            @Override
 	            public void execute(double timestamp) {
 	            	double[] widths = getColumnWidths();
-					adjustGridWidth(widths);
+					if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) adjustGridWidth(widths);
+					else if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) adjustLastColumnWidth(widths);
 	            }
 			};
-			if (getState().autoResizeWidth) {
+			if (getState().compensationMode != ColumnResizeCompensationMode.NONE) {
 				AnimationScheduler.get().requestAnimationFrame(adjustCallback);
 			}
 		});
@@ -152,9 +182,11 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		grid.addColumnResizeHandler(event -> {
 			double[] widths = getColumnWidths();
 			getServerRPC().reportColumns(widths);
-			if (getState().autoResizeWidth) {
+			if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) {
 				getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
 				adjustGridWidth(widths);
+			} else if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) {
+				adjustLastColumnWidth(widths);				
 			}
 		});
 		

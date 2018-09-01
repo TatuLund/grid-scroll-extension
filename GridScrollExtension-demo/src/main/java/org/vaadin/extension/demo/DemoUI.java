@@ -9,6 +9,7 @@ import java.util.Random;
 import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.extension.gridscroll.GridScrollExtension;
+import org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -88,7 +89,7 @@ public class DemoUI extends UI {
 				ext1.adjustGridWidth();
 			});
 			
-			ext1.setAutoResizeWidth(true);
+			ext1.setColumnResizeComponesationMode(ColumnResizeCompensationMode.RESIZE_GRID);
 			
 			ext1.addGridRenderedListener(event -> {
 				String widths = "Column widths:";
@@ -121,7 +122,8 @@ public class DemoUI extends UI {
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
 			vLayout.addComponent(hLayout);
 			addComponent(vLayout);
-			setMargin(true);			
+			setMargin(true);
+					
 		}
 	}
 
@@ -158,6 +160,7 @@ public class DemoUI extends UI {
 				Integer newPos = Integer.parseInt(field.getValue());				
 				ext2.setScrollPosition(0, newPos);
 			});
+			ext2.setColumnResizeComponesationMode(ColumnResizeCompensationMode.RESIZE_COLUMN);
 			hLayout.addComponents(field,gotoButton,saveButton);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);

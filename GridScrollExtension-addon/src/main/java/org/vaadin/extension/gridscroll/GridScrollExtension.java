@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionServerRPC;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
@@ -152,6 +153,16 @@ public class GridScrollExtension extends AbstractExtension {
 	}
 	
 	/**
+	 * Adjust last the width of the last column to occupy remaining space (if such exist)
+	 * 
+	 * Programmatic change of column widths do not trigger column resize event, hence you
+	 * need to call this if you want to refit Grid 
+	 */
+	public void adjustLastColumnWidth() {
+		getClientRPC().adjustLastColumn();		
+	}
+	
+	/**
 	 * Get actual width of the column by column reference
 	 * Note: There is small delay after Grid has been attached before real widths are available
 	 * 
@@ -253,10 +264,30 @@ public class GridScrollExtension extends AbstractExtension {
 	/**
 	 * Set Grid to resize itself according to column widths automatically
 	 * 
+	 * DEPRECATED, use setColumnResizeCompensationMode(..) instead.
+	 * 
 	 * @param autoResizeWidth If true Grid resizes itself to column widths 
 	 */
+	@Deprecated
 	public void setAutoResizeWidth(boolean autoResizeWidth) {
-		getState().autoResizeWidth = autoResizeWidth;
+		if (autoResizeWidth) getState().compensationMode = ColumnResizeCompensationMode.RESIZE_GRID;
+		else getState().compensationMode = ColumnResizeCompensationMode.NONE;
+	}
+	
+	/**
+	 * Set how Grid should be adjusted when columns are being resized by user
+	 * ColumnResizeCompensationMode.RESIZE_GRID will adjust Grid width
+	 * and ColumnResizeCompensationMode.RESIZE_COLUMN the last column. 
+	 * Default is ColumnResizeCompensationMode.NONE.
+	 * 
+	 * @param mode ColumnResizeCompensationMode
+	 */
+	public void setColumnResizeComponesationMode(ColumnResizeCompensationMode mode) {
+		getState().compensationMode = mode;
+	}
+	
+	public ColumnResizeCompensationMode getColumnResizeComponesationMode() {
+		return getState().compensationMode;
 	}
 	
     @Override
