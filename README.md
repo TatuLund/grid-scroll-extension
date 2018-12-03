@@ -51,6 +51,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.3.1
+- ColumnResizeCompensationMode.RESIZE_COLUMN is now applied to fill the empty space also when Grid is resized
+
 ### Version 2.3.0
 - Added ColumnResizeCompensationMode to choose between resizing Grid and resizing last column to compensate resizing of columns. 
 

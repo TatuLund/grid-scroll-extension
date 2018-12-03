@@ -17,8 +17,15 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.util.ReflectTools;
 
-// This is the server-side UI component that provides public API 
-// for MyComponent
+/**
+ * GridScrollExtension is multi purpose Grid enhancement package. It features 
+ * additional events (resize, scroll, etc.), methods for pixelwise scrolling and
+ * methods for componsating empty space appearing to Grid right side when columns
+ * or Grid is being resized. 
+ * 
+ * @author Tatu Lund
+ *
+ */
 @SuppressWarnings("serial")
 public class GridScrollExtension extends AbstractExtension {
 	private int lastXPosition;
@@ -279,6 +286,9 @@ public class GridScrollExtension extends AbstractExtension {
 	 * ColumnResizeCompensationMode.RESIZE_GRID will adjust Grid width
 	 * and ColumnResizeCompensationMode.RESIZE_COLUMN the last column. 
 	 * Default is ColumnResizeCompensationMode.NONE.
+	 * 
+	 * Note: ColumnResizeCompensationMode.RESIZE_COLUM takes effect also when
+	 * Grid is being resized.
 	 * 
 	 * @param mode ColumnResizeCompensationMode
 	 */

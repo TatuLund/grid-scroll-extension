@@ -226,6 +226,10 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 				}
 				if(send) {
 					getServerRPC().reportSize(width, heigth);
+					if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) {
+						double[] widths = getColumnWidths();
+						adjustLastColumnWidth(widths);				
+					}
 				}
 			}
 		};
