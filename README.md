@@ -51,6 +51,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.3.2
+- Fixing issues with compensation used when Column.setMaximumWidth(..) used. Works as partial workaround for some generic Grid Column.setMaximumWidth(..) bugs
+
 ### Version 2.3.1
 - ColumnResizeCompensationMode.RESIZE_COLUMN is now applied to fill the empty space also when Grid is resized
 

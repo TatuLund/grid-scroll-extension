@@ -9,17 +9,13 @@ import org.vaadin.extension.gridscroll.shared.GridScrollExtensionState;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.widget.grid.events.ColumnResizeEvent;
-import com.vaadin.client.widget.grid.events.ColumnResizeHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.Connect;
 
@@ -39,6 +35,20 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		int columns = grid.getVisibleColumns().size();
 		double[] widths = new double[columns]; 
 		for (int i=0;i<columns;i++) widths[i] = grid.getVisibleColumns().get(i).getWidthActual();
+		return widths;
+	}
+	
+	private double[] getColumnWidthsCapped() {
+		int columns = grid.getVisibleColumns().size();
+		double[] widths = new double[columns]; 
+		for (int i=0;i<columns;i++) {
+			widths[i] = grid.getVisibleColumns().get(i).getWidthActual();
+			double maxWidth = grid.getVisibleColumns().get(i).getMaximumWidth();
+			if (widths[i] > maxWidth && maxWidth > 0) {
+				widths[i] =  maxWidth;
+				grid.getVisibleColumns().get(i).setWidth(maxWidth);
+			}
+		}
 		return widths;
 	}
 	
@@ -180,13 +190,25 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		});
 		
 		grid.addColumnResizeHandler(event -> {
-			double[] widths = getColumnWidths();
-			getServerRPC().reportColumns(widths);
 			if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) {
-				getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
-				adjustGridWidth(widths);
+				Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
+					@Override
+					public void execute() {
+						double[] widths = getColumnWidthsCapped();
+						getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
+						adjustGridWidth(widths);
+						getServerRPC().reportColumns(widths);
+					}
+				});
 			} else if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) {
-				adjustLastColumnWidth(widths);				
+				Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
+					@Override
+					public void execute() {
+		    			double[] widths = getColumnWidthsCapped();
+						adjustLastColumnWidth(widths);
+						getServerRPC().reportColumns(widths);						
+					}
+				});
 			}
 		});
 		
@@ -227,8 +249,14 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 				if(send) {
 					getServerRPC().reportSize(width, heigth);
 					if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) {
-						double[] widths = getColumnWidths();
-						adjustLastColumnWidth(widths);				
+						Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
+							@Override
+							public void execute() {
+				    			double[] widths = getColumnWidthsCapped();
+								adjustLastColumnWidth(widths);
+								getServerRPC().reportColumns(widths);						
+							}
+						});
 					}
 				}
 			}

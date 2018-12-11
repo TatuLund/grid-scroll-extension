@@ -46,11 +46,11 @@ public class DemoUI extends UI {
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid1.addColumn(SimplePojo::getDescription);			
-			grid1.addColumn(SimplePojo::getStars);
-			grid1.addColumn(SimplePojo::isTruth);
-			grid1.addColumn(SimplePojo::getDate);
-			grid1.addColumn(SimplePojo::getNumber);
+			grid1.addColumn(SimplePojo::getDescription).setCaption("Description").setMaximumWidth(250);			
+			grid1.addColumn(SimplePojo::getStars).setCaption("Rating").setMaximumWidth(250);
+			grid1.addColumn(SimplePojo::isTruth).setCaption("Boolean");
+			grid1.addColumn(SimplePojo::getDate).setCaption("A date");
+			grid1.addColumn(SimplePojo::getNumber).setCaption("Long number");
 			grid1.setItems(data);
 			grid1.setSizeFull();
 			VerticalLayout vLayout= new VerticalLayout();
@@ -139,11 +139,11 @@ public class DemoUI extends UI {
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid2.addColumn(SimplePojo::getDescription);			
-			grid2.addColumn(SimplePojo::getStars);
-			grid2.addColumn(SimplePojo::isTruth);
-			grid2.addColumn(SimplePojo::getDate);
-			grid2.addColumn(SimplePojo::getNumber);
+			grid2.addColumn(SimplePojo::getDescription).setCaption("Description").setMaximumWidth(250);			
+			grid2.addColumn(SimplePojo::getStars).setCaption("Rating").setMaximumWidth(250);
+			grid2.addColumn(SimplePojo::isTruth).setCaption("Boolean").setMaximumWidth(250);
+			grid2.addColumn(SimplePojo::getDate).setCaption("A date").setMaximumWidth(250);
+			grid2.addColumn(SimplePojo::getNumber).setCaption("Long number");
 			grid2.setItems(data);
 			grid2.setSizeFull();
 			VerticalLayout vLayout= new VerticalLayout();
