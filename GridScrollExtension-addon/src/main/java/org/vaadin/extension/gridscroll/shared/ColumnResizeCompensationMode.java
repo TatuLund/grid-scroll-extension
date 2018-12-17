@@ -17,7 +17,14 @@ public enum ColumnResizeCompensationMode {
     /**
      * When column resize compensation mode is set to RESIZE_COLUMN,
      * Grid's last column is adjusted occupy the remaining space
-     * available (if there is any). 
+     * available (if there is any).
+     *  
+	 * Note: ColumnResizeCompensationMode.RESIZE_COLUM takes effect also when
+	 * Grid is being resized.
+	 * 
+	 * Note: When ColumnResizeCompensationMode.RESIZE_COLUM is used, the {@link com.vaadin.ui.Grid.Column#setMaximumWidth(double)} 
+	 * cannot be used with the last column
+	 * 
      */
 	RESIZE_COLUMN
 	

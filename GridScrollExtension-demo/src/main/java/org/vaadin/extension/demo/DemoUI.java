@@ -36,7 +36,7 @@ public class DemoUI extends UI {
 
 	public class GridTab1 extends VerticalLayout {
 		private Grid<SimplePojo> grid1 = new Grid<>();
-        private GridScrollExtension ext1 = new GridScrollExtension(grid1);
+        private GridScrollExtension<SimplePojo> ext1 = new GridScrollExtension<>(grid1);
 
 		GridTab1() {
 			Random random = new Random(4837291937l);
@@ -129,7 +129,7 @@ public class DemoUI extends UI {
 
 	public class GridTab2 extends VerticalLayout {
 		private Grid<SimplePojo> grid2 = new Grid<>();
-        private GridScrollExtension ext2 = new GridScrollExtension(grid2);
+        private GridScrollExtension<SimplePojo> ext2 = new GridScrollExtension<>(grid2);
 
 		GridTab2() {
 			Random random = new Random(4837291937l);

@@ -51,6 +51,11 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.3.3
+- Improved JavaDocs
+- Improved type safety
+- added setRestorePosition(..) to workaround issue #5
+
 ### Version 2.3.2
 - Fixing issues with compensation used when Column.setMaximumWidth(..) used. Works as partial workaround for some generic Grid Column.setMaximumWidth(..) bugs
 

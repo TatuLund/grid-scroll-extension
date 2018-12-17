@@ -23,40 +23,63 @@ import com.vaadin.util.ReflectTools;
  * methods for componsating empty space appearing to Grid right side when columns
  * or Grid is being resized. 
  * 
+ * @param <T> Bean type of the Grid
+ * 
  * @author Tatu Lund
  *
  */
 @SuppressWarnings("serial")
-public class GridScrollExtension extends AbstractExtension {
+public class GridScrollExtension<T> extends AbstractExtension {
 	private int lastXPosition;
 	private int lastYPosition;
 	private double[] columnWidths;
-	private Grid<?> grid;
+	private Grid<T> grid;
 	private int lastWidth;
 	private int lastHeight;
+	private boolean restorePosition = true;	
 	
-	public interface GridScrolledListener extends ConnectorEventListener {
+	/**
+	 * A listener interface for {@link GridScrolledEvent}
+	 * 
+	 * @param <T> Bean type of the Grid
+	 */
+	public interface GridScrolledListener<T> extends ConnectorEventListener {
 		Method GRID_SCROLLED_METHOD = ReflectTools.findMethod(
 				GridScrolledListener.class, "gridScrolled", GridScrolledEvent.class);
-		public void gridScrolled(GridScrolledEvent event);
+		public void gridScrolled(GridScrolledEvent<T> event);
 	}
 	
-	public interface GridRenderedListener extends ConnectorEventListener {
+	/**
+	 * A Listener interface for {@link GridRenderedEvent}
+	 *
+	 * @param <T> Bean type of the Grid
+	 */
+	public interface GridRenderedListener<T> extends ConnectorEventListener {
 		Method GRID_RENDERED_METHOD = ReflectTools.findMethod(
 				GridRenderedListener.class, "gridRendered", GridRenderedEvent.class);
-		public void gridRendered(GridRenderedEvent event);
+		public void gridRendered(GridRenderedEvent<T> event);
 	}
-	
-	public interface GridResizedListener extends ConnectorEventListener {
+
+	/**
+	 * A Listener interface for {@link GridResizedEvent}
+	 * 
+	 * @param <T> Bean type of the Grid
+	 */
+	public interface GridResizedListener<T> extends ConnectorEventListener {
 		Method GRID_RESIZED_METHOD = ReflectTools.findMethod(
 				GridResizedListener.class, "gridResized", GridResizedEvent.class);
-		public void gridResized(GridResizedEvent event);
+		public void gridResized(GridResizedEvent<T> event);
 	}
 	
-	public interface GridColumnsResizedListener extends ConnectorEventListener {
+	/**
+	 * A Listener interface for {@link GridColumnsResizedEvent}
+	 * 
+	 * @param <T> Bean type of the Grid
+	 */
+	public interface GridColumnsResizedListener<T> extends ConnectorEventListener {
 		Method GRID_COLUMNS_RESIZED_METHOD = ReflectTools.findMethod(
 				GridColumnsResizedListener.class, "gridColumnsResized", GridColumnsResizedEvent.class);
-		public void gridColumnsResized(GridColumnsResizedEvent event);
+		public void gridColumnsResized(GridColumnsResizedEvent<T> event);
 	}
 	
 	/**
@@ -64,41 +87,42 @@ public class GridScrollExtension extends AbstractExtension {
 	 * 
 	 * @param grid Grid to be extended
 	 */	
-	public GridScrollExtension(Grid grid) {
+	public GridScrollExtension(Grid<T> grid) {
 		this.extend(grid);
 		this.grid = grid;
 		registerRpc(new GridScrollExtensionServerRPC() {
+
 			@Override
 			public void ping() {
 			}
 
 			@Override
 			public void reportPosition(int Xposition, int Yposition) {
-				if(Xposition == -1 || Yposition == -1) {
+				if (restorePosition && (Xposition == -1 || Yposition == -1))  {
 					restoreScrollPosition();
 				} else {
 					lastXPosition = Xposition;
 					lastYPosition = Yposition;
-					fireEvent(new GridScrolledEvent(grid));
+					fireEvent(new GridScrolledEvent<T>(grid));
 				}
 			}
 
 			@Override
 			public void reportColumns(double[] widths) {
 				columnWidths = widths;				
-				fireEvent(new GridColumnsResizedEvent(grid));
+				fireEvent(new GridColumnsResizedEvent<T>(grid));
 			}
 
 			@Override
 			public void reportSize(int width, int height) {
 				lastWidth = width;
 				lastHeight = height;
-				fireEvent(new GridResizedEvent(grid));
+				fireEvent(new GridResizedEvent<T>(grid));
 			}
 
 			@Override
 			public void gridInitialColumnWidthsCalculated() {
-				fireEvent(new GridRenderedEvent(grid)); 
+				fireEvent(new GridRenderedEvent<T>(grid)); 
 			}
 		});
 	}
@@ -110,41 +134,42 @@ public class GridScrollExtension extends AbstractExtension {
 	 * 
 	 * @param listener A GridRenderedListener to be added
 	 */
-	public Registration addGridRenderedListener(GridRenderedListener listener) {
+	public Registration addGridRenderedListener(GridRenderedListener<T> listener) {
 		return addListener(GridRenderedEvent.class, listener, GridRenderedListener.GRID_RENDERED_METHOD);
 	}
 	
 	/**
-	 * Add a new GridResizedListener
-	 * The GridResizedEvent event is fired every time Grid size has been changed 
-	 * when GridScrollExtension.setAutoResizeWidth(true) has been applied
+	 * Add a new {@link GridResizedListener}
+	 * The {@link GridResizedEvent} event is fired every time Grid size has been changed 
+     * when {@link GridScrollExtension#setColumnResizeComponesationMode(org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode)}
+     * with {@link org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode#RESIZE_GRID} has been applied.
 	 * 
 	 * @param listener A GridResizedListener to be added
 	 */
-	public Registration addGridResizedListener(GridResizedListener listener) {
+	public Registration addGridResizedListener(GridResizedListener<T> listener) {
 		return addListener(GridResizedEvent.class, listener, GridResizedListener.GRID_RESIZED_METHOD);
 	}
 
 	/**
-	 * Add a new GridColumnsResizedListener
-	 * The GridColumnsResizedEvent event is fired every time Grid column sizes has been changed
+	 * Add a new {@link GridColumnsResizedListener}
+	 * The {@link GridColumnsResizedEvent} event is fired every time Grid column sizes has been changed
 	 * 
 	 * Note, there is similar event in Grid, but that is fired before you can fetch real column widths, this
 	 * event is fired after widths are available, hence you can get correct widths
 	 * 
 	 * @param listener A GridColumnsResizedListener to be added
 	 */
-	public Registration addGridColumnsResizedListener(GridColumnsResizedListener listener) {
+	public Registration addGridColumnsResizedListener(GridColumnsResizedListener<T> listener) {
 		return addListener(GridColumnsResizedEvent.class, listener, GridColumnsResizedListener.GRID_COLUMNS_RESIZED_METHOD);
 	}
 	
 	/**
-	 * Add a new GridScrolledListener
-	 * The GridScrolledEvent event is fired when Grid scroll position changes
+	 * Add a new {@link GridScrolledListener}
+	 * The {@link GridScrolledEvent} event is fired when Grid scroll position changes
 	 *  
 	 * @param listener A GridScrolledListener to be added
 	 */
-	public Registration addGridScrolledListener(GridScrolledListener listener) {
+	public Registration addGridScrolledListener(GridScrolledListener<T> listener) {
 		return addListener(GridScrolledEvent.class, listener, GridScrolledListener.GRID_SCROLLED_METHOD);
 	}
 	
@@ -244,10 +269,20 @@ public class GridScrollExtension extends AbstractExtension {
 		return lastYPosition;
 	}
 
+	/**
+	 * Get actual width
+	 * 
+	 * @return The last reported actual width of the Grid 
+	 */
 	public int getWidth() {
 		return lastWidth;
 	}
 	
+	/**
+	 * Get actual height
+	 * 
+	 * @return The last reported actual height of the Grid 
+	 */
 	public int getHeight() {
 		return lastHeight;
 	}
@@ -290,12 +325,21 @@ public class GridScrollExtension extends AbstractExtension {
 	 * Note: ColumnResizeCompensationMode.RESIZE_COLUM takes effect also when
 	 * Grid is being resized.
 	 * 
+	 * Note: When ColumnResizeCompensationMode.RESIZE_COLUM is used, the {@link com.vaadin.ui.Grid.Column#setMaximumWidth(double)} 
+	 * cannot be used with the last column
+	 * 
 	 * @param mode ColumnResizeCompensationMode
 	 */
 	public void setColumnResizeComponesationMode(ColumnResizeCompensationMode mode) {
 		getState().compensationMode = mode;
 	}
 	
+	
+	/**
+	 * Get the current compensation mode
+	 * 
+	 * @return The current compensation mode
+	 */
 	public ColumnResizeCompensationMode getColumnResizeComponesationMode() {
 		return getState().compensationMode;
 	}
@@ -305,5 +349,15 @@ public class GridScrollExtension extends AbstractExtension {
         return (GridScrollExtensionState) super.getState();
     }
 
-
+    /**
+     * By default extension restores the last known position in order to make Grid recover
+     * position during {@link com.vaadin.ui.TabSheet.Tab} changes. There is a side effect
+     * of this, that {@link Grid#scrollTo(int)} does not work when calling right after Grid
+     * has been created. This feature can be turned off if needed by setting this to false.
+     * 
+     * @param restorePosition Use false to disable automatic position restore feature
+     */
+    public void setRestorePosition(boolean restorePosition) {
+    	this.restorePosition = restorePosition;
+    }
 }
