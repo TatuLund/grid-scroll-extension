@@ -51,6 +51,10 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.3.4
+- Fixing typo in method set/getColumnResizeCompensationMode name
+- Improved JavaDocs
+
 ### Version 2.3.3
 - Improved JavaDocs
 - Improved type safety

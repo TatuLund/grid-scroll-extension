@@ -129,6 +129,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 * Add a new GridRenderedListener
 	 * The GridRenderedEvent event is fired once after Grid's initial column width calculation is complete
 	 * 
+	 * @since 2.2.0
+	 * 
 	 * @param listener A GridRenderedListener to be added
 	 */
 	public Registration addGridRenderedListener(GridRenderedListener<T> listener) {
@@ -140,6 +142,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 * The {@link GridResizedEvent} event is fired every time Grid size has been changed 
      * when {@link GridScrollExtension#setColumnResizeCompensationMode(org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode)}
      * with {@link org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode#RESIZE_GRID} has been applied.
+	 * 
+	 * @since 2.2.0
 	 * 
 	 * @param listener A GridResizedListener to be added
 	 */
@@ -154,6 +158,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 * Note, there is similar event in Grid, but that is fired before you can fetch real column widths, this
 	 * event is fired after widths are available, hence you can get correct widths
 	 * 
+	 * @since 2.2.0
+	 * 
 	 * @param listener A GridColumnsResizedListener to be added
 	 */
 	public Registration addGridColumnsResizedListener(GridColumnsResizedListener<T> listener) {
@@ -163,6 +169,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	/**
 	 * Add a new {@link GridScrolledListener}
 	 * The {@link GridScrolledEvent} event is fired when Grid scroll position changes
+	 * 
+	 * @since 2.2.0
 	 *  
 	 * @param listener A GridScrolledListener to be added
 	 */
@@ -176,6 +184,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 * 
 	 * Programmatic change of column widths do not trigger column resize event, hence you
 	 * need to call this if you want to refit Grid 
+	 * 
+	 * @since 2.2.0
 	 */
 	public void adjustGridWidth() {
 		getClientRPC().recalculateGridWidth();		
@@ -195,6 +205,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 * Get actual width of the column by column reference
 	 * Note: There is small delay after Grid has been attached before real widths are available
 	 * 
+	 * @since 2.1.0
+	 * 
 	 * @param column The column reference
 	 * @return Actual width of the column in pixels double value
 	 */
@@ -212,7 +224,9 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	/**
 	 * Get actual width of the column by columnId 
 	 * Note: There is small delay after Grid has been attached before real widths are available
-
+	 * 
+	 * @since 2.1.0
+     *
 	 * @param columnId Id string / property name of the column
 	 * @return Actual width of the column in pixels double value
 	 */
@@ -230,7 +244,9 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	/**
 	 * Get actual width of the column by index 
 	 * Note: There is small delay after Grid has been attached before real widths are available
-
+	 * 
+	 * @since 2.1.0
+     *
 	 * @param i Index of the column
 	 * @return Actual width of the column in pixels double value
 	 */
@@ -269,6 +285,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	/**
 	 * Get actual width
 	 * 
+	 * @since 2.2.0
+	 * 
 	 * @return The last reported actual width of the Grid 
 	 */
 	public int getWidth() {
@@ -277,6 +295,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	
 	/**
 	 * Get actual height
+	 * 
+	 * @since 2.2.0
 	 * 
 	 * @return The last reported actual height of the Grid 
 	 */
@@ -303,7 +323,7 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	/**
 	 * Set Grid to resize itself according to column widths automatically
 	 * 
-	 * DEPRECATED, use setColumnResizeCompensationMode(..) instead.
+	 * @deprecated since 2.3.0, use {@link #setColumnResizeCompensationMode(ColumnResizeCompensationMode)} instead.
 	 * 
 	 * @param autoResizeWidth If true Grid resizes itself to column widths 
 	 */
@@ -332,6 +352,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 *
 	 * Note: When ColumnResizeCompensationMode.RESIZE_COLUM is used, the {@link com.vaadin.ui.Grid.Column#setMaximumWidth(double)}
 	 * cannot be used with the last column
+	 * 
+	 * @since 2.3.0
 	 *
 	 * @param mode ColumnResizeCompensationMode
 	 */
@@ -350,6 +372,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	/**
 	 * Get the current compensation mode
 	 *
+	 * @since 2.3.0
+	 *
 	 * @return The current compensation mode
 	 */
 	public ColumnResizeCompensationMode getColumnResizeCompensationMode() {
@@ -366,6 +390,8 @@ public class GridScrollExtension<T> extends AbstractExtension {
      * position during {@link com.vaadin.ui.TabSheet.Tab} changes. There is a side effect
      * of this, that {@link Grid#scrollTo(int)} does not work when calling right after Grid
      * has been created. This feature can be turned off if needed by setting this to false.
+     * 
+     * @since 2.3.3
      * 
      * @param restorePosition Use false to disable automatic position restore feature
      */

@@ -8,6 +8,8 @@ import com.vaadin.ui.Grid;
  *
  * @see GridScrollExtension#addGridRenderedListener(org.vaadin.extension.gridscroll.GridScrollExtension.GridRenderedListener)
  *
+ * @since 2.2.0
+ * 
  * @param <T> Bean type of the Grid
  * 
  * @author Tatu Lund

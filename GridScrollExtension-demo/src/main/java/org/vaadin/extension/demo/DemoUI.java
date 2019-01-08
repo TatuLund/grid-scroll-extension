@@ -89,7 +89,7 @@ public class DemoUI extends UI {
 				ext1.adjustGridWidth();
 			});
 			
-			ext1.setColumnResizeComponesationMode(ColumnResizeCompensationMode.RESIZE_GRID);
+			ext1.setColumnResizeCompensationMode(ColumnResizeCompensationMode.RESIZE_GRID);
 			
 			ext1.addGridRenderedListener(event -> {
 				String widths = "Column widths:";
@@ -160,7 +160,7 @@ public class DemoUI extends UI {
 				Integer newPos = Integer.parseInt(field.getValue());				
 				ext2.setScrollPosition(0, newPos);
 			});
-			ext2.setColumnResizeComponesationMode(ColumnResizeCompensationMode.RESIZE_COLUMN);
+			ext2.setColumnResizeCompensationMode(ColumnResizeCompensationMode.RESIZE_COLUMN);
 			hLayout.addComponents(field,gotoButton,saveButton);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);

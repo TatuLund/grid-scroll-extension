@@ -6,6 +6,8 @@ import com.vaadin.ui.Grid;
 /**
  * The GridColumnsResizedEvent when Grid's columns are being resized
  * 
+ * @since 2.2.0
+ * 
  * @see GridScrollExtension#addGridColumnsResizedListener(org.vaadin.extension.gridscroll.GridScrollExtension.GridColumnsResizedListener)
  *
  * @param <T> Bean type of the Grid

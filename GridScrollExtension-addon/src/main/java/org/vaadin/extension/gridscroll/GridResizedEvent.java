@@ -8,6 +8,8 @@ import com.vaadin.ui.Grid;
  * when {@link GridScrollExtension#setColumnResizeComponesationMode(org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode)}
  * with {@link org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode#RESIZE_GRID} has been applied.
  * 
+ * @since 2.2.0
+ * 
  * @see GridScrollExtension#addGridResizedListener(org.vaadin.extension.gridscroll.GridScrollExtension.GridResizedListener)
  *   
  * @param <T> Bean type of the Grid  

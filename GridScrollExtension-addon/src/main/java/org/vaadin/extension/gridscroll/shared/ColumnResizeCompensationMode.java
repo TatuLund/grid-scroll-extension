@@ -1,5 +1,12 @@
 package org.vaadin.extension.gridscroll.shared;
 
+/***
+ * Definitions for column resize compensation modes
+ * 
+ * @since 2.3.0
+ * 
+ * @author Tatu Lund
+ */
 public enum ColumnResizeCompensationMode {
 
     /**
