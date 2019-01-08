@@ -1,9 +1,6 @@
 package org.vaadin.extension.gridscroll;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
@@ -141,7 +138,7 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	/**
 	 * Add a new {@link GridResizedListener}
 	 * The {@link GridResizedEvent} event is fired every time Grid size has been changed 
-     * when {@link GridScrollExtension#setColumnResizeComponesationMode(org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode)}
+     * when {@link GridScrollExtension#setColumnResizeCompensationMode(org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode)}
      * with {@link org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode#RESIZE_GRID} has been applied.
 	 * 
 	 * @param listener A GridResizedListener to be added
@@ -317,30 +314,45 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	}
 	
 	/**
+	 * @deprecated since 2.3.4, please use {@link #setColumnResizeCompensationMode(ColumnResizeCompensationMode)} instead.
+	 */
+	@Deprecated
+	public void setColumnResizeComponesationMode(ColumnResizeCompensationMode mode) {
+		this.setColumnResizeCompensationMode(mode);
+	}
+
+	/**
 	 * Set how Grid should be adjusted when columns are being resized by user
 	 * ColumnResizeCompensationMode.RESIZE_GRID will adjust Grid width
-	 * and ColumnResizeCompensationMode.RESIZE_COLUMN the last column. 
+	 * and ColumnResizeCompensationMode.RESIZE_COLUMN the last column.
 	 * Default is ColumnResizeCompensationMode.NONE.
-	 * 
+	 *
 	 * Note: ColumnResizeCompensationMode.RESIZE_COLUM takes effect also when
 	 * Grid is being resized.
-	 * 
-	 * Note: When ColumnResizeCompensationMode.RESIZE_COLUM is used, the {@link com.vaadin.ui.Grid.Column#setMaximumWidth(double)} 
+	 *
+	 * Note: When ColumnResizeCompensationMode.RESIZE_COLUM is used, the {@link com.vaadin.ui.Grid.Column#setMaximumWidth(double)}
 	 * cannot be used with the last column
-	 * 
+	 *
 	 * @param mode ColumnResizeCompensationMode
 	 */
-	public void setColumnResizeComponesationMode(ColumnResizeCompensationMode mode) {
+	public void setColumnResizeCompensationMode(ColumnResizeCompensationMode mode) {
 		getState().compensationMode = mode;
 	}
-	
-	
+
+	/**
+	 * @deprecated since 2.3.4, please use {@link #getColumnResizeCompensationMode()} instead.
+	 */
+	@Deprecated
+	public ColumnResizeCompensationMode getColumnResizeComponesationMode() {
+		return this.getColumnResizeCompensationMode();
+	}
+
 	/**
 	 * Get the current compensation mode
-	 * 
+	 *
 	 * @return The current compensation mode
 	 */
-	public ColumnResizeCompensationMode getColumnResizeComponesationMode() {
+	public ColumnResizeCompensationMode getColumnResizeCompensationMode() {
 		return getState().compensationMode;
 	}
 	
