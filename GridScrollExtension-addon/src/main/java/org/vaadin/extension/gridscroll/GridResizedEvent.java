@@ -18,9 +18,8 @@ import com.vaadin.ui.Grid;
  */
 @SuppressWarnings("serial")
 public class GridResizedEvent<T> extends CustomComponent.Event {
-
+	
 	public GridResizedEvent(Grid<T> source) {
 		super(source);
 	}
-
 }

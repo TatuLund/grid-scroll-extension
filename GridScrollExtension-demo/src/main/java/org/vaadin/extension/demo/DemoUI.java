@@ -141,8 +141,8 @@ public class DemoUI extends UI {
 			}
 			grid2.addColumn(SimplePojo::getDescription).setCaption("Description").setMaximumWidth(250);			
 			grid2.addColumn(SimplePojo::getStars).setCaption("Rating").setMaximumWidth(250);
-			grid2.addColumn(SimplePojo::isTruth).setCaption("Boolean").setMaximumWidth(250);
-			grid2.addColumn(SimplePojo::getDate).setCaption("A date").setMaximumWidth(250);
+			grid2.addColumn(SimplePojo::isTruth).setCaption("Boolean");
+			grid2.addColumn(SimplePojo::getDate).setCaption("A date");
 			grid2.addColumn(SimplePojo::getNumber).setCaption("Long number");
 			grid2.setItems(data);
 			grid2.setSizeFull();

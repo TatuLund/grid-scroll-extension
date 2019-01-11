@@ -17,6 +17,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.shared.ui.Connect;
 
 @SuppressWarnings("serial")
@@ -30,6 +31,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 	private int width = -1;
 	private int heigth = -1;
 	Timer t = null;
+	int colIndex = -1;
 	
 	private double[] getColumnWidths() {
 		int columns = grid.getVisibleColumns().size();
@@ -74,7 +76,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 
 	// Sets the width of the last Column of the Grid to fit remaining space of Grid
 	// provided that there is space left
-	private void adjustLastColumnWidth(double[] widths) {
+	private double adjustLastColumnWidth(double[] widths) {
 		Double width = 0d;
 		for (int i=0;i<widths.length-1;i++) width = width + widths[i];
 		// Add the scroll bar width if it exists 
@@ -85,6 +87,9 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		if (totalWidth < gridWidth) {
 			Double targetWidth = gridWidth - totalWidth; 
 			grid.getVisibleColumns().get(grid.getVisibleColumns().size()-1).setWidth(targetWidth);
+			return targetWidth;
+		} else {
+			return -1.0;
 		}
 	}
 	
@@ -124,7 +129,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 					public boolean execute() {
 						double[] widths = getColumnWidths();
 						if (hasWidths(widths)) {
-							getServerRPC().reportColumns(widths);							
+							getServerRPC().reportColumns(widths,-1);							
 							getServerRPC().gridInitialColumnWidthsCalculated();
 							if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) {
 								adjustGridWidth(widths);
@@ -155,7 +160,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 				            public void execute(double timestamp) {
 				            	double[] widths = getColumnWidths();
 								adjustGridWidth(widths);
-								getServerRPC().reportColumns(widths);
+								getServerRPC().reportColumns(widths,-1);
 				            }
 						};
 						AnimationScheduler.get().requestAnimationFrame(adjustCallback);
@@ -190,6 +195,13 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		});
 		
 		grid.addColumnResizeHandler(event -> {
+			Column<?, ?> column = event.getColumn();
+			colIndex = -1;
+			int i = 0;
+			for (Column<?, ?> col : grid.getColumns()) {
+				if (col == column) colIndex = i;
+				i++;
+			}
 			if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) {
 				Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
 					@Override
@@ -197,7 +209,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 						double[] widths = getColumnWidthsCapped();
 						getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
 						adjustGridWidth(widths);
-						getServerRPC().reportColumns(widths);
+						getServerRPC().reportColumns(widths,colIndex);
 					}
 				});
 			} else if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) {
@@ -205,8 +217,9 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 					@Override
 					public void execute() {
 		    			double[] widths = getColumnWidthsCapped();
-						adjustLastColumnWidth(widths);
-						getServerRPC().reportColumns(widths);						
+						double adjustedWidth = adjustLastColumnWidth(widths);
+						if (colIndex == grid.getColumnCount()-1) widths[colIndex] = adjustedWidth;
+						getServerRPC().reportColumns(widths,colIndex);						
 					}
 				});
 			}
@@ -254,7 +267,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 							public void execute() {
 				    			double[] widths = getColumnWidthsCapped();
 								adjustLastColumnWidth(widths);
-								getServerRPC().reportColumns(widths);						
+								getServerRPC().reportColumns(widths,-1);						
 							}
 						});
 					}

@@ -11,6 +11,7 @@ import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.util.ReflectTools;
 
@@ -105,9 +106,24 @@ public class GridScrollExtension<T> extends AbstractExtension {
 			}
 
 			@Override
-			public void reportColumns(double[] widths) {
+			public void reportColumns(double[] widths, int column) {
 				columnWidths = widths;				
-				fireEvent(new GridColumnsResizedEvent<T>(grid));
+				fireEvent(new GridColumnsResizedEvent<T>(grid,column));
+				// This is awful, but needed to overcome race condition with faulty 
+				// internal mechanics of the Grid
+				if (column != -1) {
+					UI ui = UI.getCurrent();
+					Thread t = new Thread(() -> {
+						try {
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
+						}
+						ui.access(() -> {
+							grid.getColumns().get(column).setWidth(widths[column]);
+						});
+					});
+					t.start();
+				}
 			}
 
 			@Override

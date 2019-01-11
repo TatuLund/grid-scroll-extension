@@ -16,9 +16,21 @@ import com.vaadin.ui.Grid;
  */
 @SuppressWarnings("serial")
 public class GridColumnsResizedEvent<T> extends CustomComponent.Event {
-
-	public GridColumnsResizedEvent(Grid<T> source) {
+	private int column;
+	
+	public GridColumnsResizedEvent(Grid<T> source, int column) {
 		super(source);
+	}
+
+	/**
+	 * Return the index of the column that was adjusted by the user
+	 * 
+	 * @since 2.3.5
+	 * 
+	 * @return Index of the column, -1 if there was no user originated resizing
+	 */
+	public int getColumn() {
+		return column;
 	}
 
 }
