@@ -282,7 +282,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 				public void execute() {
 					double[] widths = getColumnWidthsCapped();
 					double adjustedWidth = adjustLastColumnWidth(widths);
-					if (visibleColIndex == grid.getColumnCount()-1) widths[visibleColIndex] = adjustedWidth;
+					if (visibleColIndex == grid.getVisibleColumns().size()-1) widths[visibleColIndex] = adjustedWidth;
 					getServerRPC().reportColumns(widths,visibleColIndex);						
 				}
 			});
