@@ -2,6 +2,7 @@ package org.vaadin.extension.gridscroll;
 
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 /**
  * The GridColumnsResizedEvent when Grid's columns are being resized
@@ -17,9 +18,11 @@ import com.vaadin.ui.Grid;
 @SuppressWarnings("serial")
 public class GridColumnsResizedEvent<T> extends CustomComponent.Event {
 	private int column;
+	private Grid<T> grid;
 	
 	public GridColumnsResizedEvent(Grid<T> source, int column) {
 		super(source);
+		grid = source;
 	}
 
 	/**
@@ -30,7 +33,11 @@ public class GridColumnsResizedEvent<T> extends CustomComponent.Event {
 	 * @return Index of the column, -1 if there was no user originated resizing
 	 */
 	public int getColumn() {
-		return column;
+		int colIndex = column;
+		for (Column<T, ?> col : grid.getColumns()) {
+			if (col.isHidden()) colIndex++;
+		}
+		return colIndex;
 	}
 
 }

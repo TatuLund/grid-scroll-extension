@@ -31,7 +31,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 	private int width = -1;
 	private int heigth = -1;
 	Timer t = null;
-	int colIndex = -1;
+	int visibleColIndex = -1;
 	
 	private double[] getColumnWidths() {
 		int columns = grid.getVisibleColumns().size();
@@ -194,35 +194,14 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 			}
 		});
 		
+		grid.addColumnVisibilityChangeHandler(event -> {
+			Column<?, ?> column = event.getColumn();
+			updateGridDueColumnChange(column);			
+		});
+		
 		grid.addColumnResizeHandler(event -> {
 			Column<?, ?> column = event.getColumn();
-			colIndex = -1;
-			int i = 0;
-			for (Column<?, ?> col : grid.getColumns()) {
-				if (col == column) colIndex = i;
-				i++;
-			}
-			if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) {
-				Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
-					@Override
-					public void execute() {
-						double[] widths = getColumnWidthsCapped();
-						getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
-						adjustGridWidth(widths);
-						getServerRPC().reportColumns(widths,colIndex);
-					}
-				});
-			} else if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) {
-				Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
-					@Override
-					public void execute() {
-		    			double[] widths = getColumnWidthsCapped();
-						double adjustedWidth = adjustLastColumnWidth(widths);
-						if (colIndex == grid.getColumnCount()-1) widths[colIndex] = adjustedWidth;
-						getServerRPC().reportColumns(widths,colIndex);						
-					}
-				});
-			}
+			updateGridDueColumnChange(column);
 		});
 		
 		t = new Timer() {
@@ -275,6 +254,39 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 			}
 		};
 		t.scheduleRepeating(250);
+	}
+
+	private void updateGridDueColumnChange(Column<?, ?> column) {
+		int i = 0;
+		visibleColIndex = -1;
+		for (Column<?, ?> col : grid.getVisibleColumns()) {
+			if (col == column) { 
+				visibleColIndex = i;
+				break;
+			}
+			i++;
+		}
+		if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_GRID) {
+			Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
+				@Override
+				public void execute() {
+					double[] widths = getColumnWidthsCapped();
+					getServerRPC().reportSize(grid.getOffsetWidth(), grid.getOffsetHeight());
+					adjustGridWidth(widths);
+					getServerRPC().reportColumns(widths,visibleColIndex);
+				}
+			});
+		} else if (getState().compensationMode == ColumnResizeCompensationMode.RESIZE_COLUMN) {
+			Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
+				@Override
+				public void execute() {
+					double[] widths = getColumnWidthsCapped();
+					double adjustedWidth = adjustLastColumnWidth(widths);
+					if (visibleColIndex == grid.getColumnCount()-1) widths[visibleColIndex] = adjustedWidth;
+					getServerRPC().reportColumns(widths,visibleColIndex);						
+				}
+			});
+		}
 	}
 	
 	@Override

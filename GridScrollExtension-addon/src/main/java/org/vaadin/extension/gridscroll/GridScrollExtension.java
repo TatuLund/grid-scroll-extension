@@ -230,9 +230,10 @@ public class GridScrollExtension<T> extends AbstractExtension {
 		double width = 0;
 		int i = 0;
 		if (columnWidths == null) return -1.0;
+		if (column.isHidden()) return -1.0;
 		for (Column<?, ?> col : grid.getColumns()) {
 			if (col == column) width = columnWidths[i];
-			i++;
+			if (!col.isHidden()) i++;
 		}
 		return width;		
 	}

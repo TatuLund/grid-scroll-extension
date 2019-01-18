@@ -51,6 +51,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.4.0
+- Added support for hidden columns
+
 ### Version 2.3.5
 - Improved workaround to overcome issues with maximum widths of the columns, also fixes the issue #10 
 - Added getColumn() to GridColumnsResizedEvent

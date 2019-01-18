@@ -47,7 +47,7 @@ public class DemoUI extends UI {
 								.valueOf(random.nextInt(5))));
 			}
 			grid1.addColumn(SimplePojo::getDescription).setCaption("Description").setMaximumWidth(250);			
-			grid1.addColumn(SimplePojo::getStars).setCaption("Rating").setMaximumWidth(250);
+			grid1.addColumn(SimplePojo::getStars).setCaption("Rating").setHidable(true).setMaximumWidth(250);
 			grid1.addColumn(SimplePojo::isTruth).setCaption("Boolean");
 			grid1.addColumn(SimplePojo::getDate).setCaption("A date");
 			grid1.addColumn(SimplePojo::getNumber).setCaption("Long number");
@@ -140,7 +140,7 @@ public class DemoUI extends UI {
 								.valueOf(random.nextInt(5))));
 			}
 			grid2.addColumn(SimplePojo::getDescription).setCaption("Description").setMaximumWidth(250);			
-			grid2.addColumn(SimplePojo::getStars).setCaption("Rating").setMaximumWidth(250);
+			grid2.addColumn(SimplePojo::getStars).setCaption("Rating").setHidable(true).setMaximumWidth(250);
 			grid2.addColumn(SimplePojo::isTruth).setCaption("Boolean");
 			grid2.addColumn(SimplePojo::getDate).setCaption("A date");
 			grid2.addColumn(SimplePojo::getNumber).setCaption("Long number");
