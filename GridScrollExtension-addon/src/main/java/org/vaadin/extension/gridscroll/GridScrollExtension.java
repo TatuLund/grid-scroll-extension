@@ -119,7 +119,11 @@ public class GridScrollExtension<T> extends AbstractExtension {
 						} catch (InterruptedException e) {
 						}
 						ui.access(() -> {
-							grid.getColumns().get(column).setWidth(widths[column]);
+							if (widths[column] < 0) {
+								grid.getColumns().get(column).setWidthUndefined();
+							} else { 
+								grid.getColumns().get(column).setWidth(widths[column]);
+							}
 						});
 					});
 					t.start();

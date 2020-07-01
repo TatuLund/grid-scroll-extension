@@ -51,6 +51,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.4.1
+- Fixing possible issue with undefined column widths
+
 ### Version 2.4.0
 - Added support for hidden columns
 
