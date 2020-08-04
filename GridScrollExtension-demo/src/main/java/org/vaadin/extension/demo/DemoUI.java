@@ -46,11 +46,11 @@ public class DemoUI extends UI {
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid1.addColumn(SimplePojo::getDescription).setCaption("Description").setMaximumWidth(250);			
-			grid1.addColumn(SimplePojo::getStars).setCaption("Rating").setHidable(true).setMaximumWidth(250);
-			grid1.addColumn(SimplePojo::isTruth).setCaption("Boolean");
-			grid1.addColumn(SimplePojo::getDate).setCaption("A date");
-			grid1.addColumn(SimplePojo::getNumber).setCaption("Long number");
+			grid1.addColumn(SimplePojo::getDescription).setCaption("Description").setHidable(true).setMaximumWidth(250);			
+			grid1.addColumn(SimplePojo::getStars).setCaption("Rating").setHidable(true).setMinimumWidth(100).setMaximumWidth(250);
+			grid1.addColumn(SimplePojo::isTruth).setCaption("Boolean").setHidable(true);
+			grid1.addColumn(SimplePojo::getDate).setCaption("A date").setHidable(true);
+			grid1.addColumn(SimplePojo::getNumber).setCaption("Long number").setHidable(true);
 			grid1.setItems(data);
 			grid1.setSizeFull();
 			VerticalLayout vLayout= new VerticalLayout();
@@ -139,11 +139,11 @@ public class DemoUI extends UI {
 						BigDecimal.valueOf(random.nextDouble() * 100), Double
 								.valueOf(random.nextInt(5))));
 			}
-			grid2.addColumn(SimplePojo::getDescription).setCaption("Description").setMaximumWidth(250);			
+			grid2.addColumn(SimplePojo::getDescription).setCaption("Description").setHidable(true).setMaximumWidth(250);			
 			grid2.addColumn(SimplePojo::getStars).setCaption("Rating").setHidable(true).setMaximumWidth(250);
-			grid2.addColumn(SimplePojo::isTruth).setCaption("Boolean");
-			grid2.addColumn(SimplePojo::getDate).setCaption("A date");
-			grid2.addColumn(SimplePojo::getNumber).setCaption("Long number");
+			grid2.addColumn(SimplePojo::isTruth).setCaption("Boolean").setHidable(true);
+			grid2.addColumn(SimplePojo::getDate).setCaption("A date").setHidable(true);
+			grid2.addColumn(SimplePojo::getNumber).setCaption("Long number").setHidable(true);
 			grid2.setItems(data);
 			grid2.setSizeFull();
 			VerticalLayout vLayout= new VerticalLayout();
@@ -161,6 +161,7 @@ public class DemoUI extends UI {
 				ext2.setScrollPosition(0, newPos);
 			});
 			ext2.setColumnResizeCompensationMode(ColumnResizeCompensationMode.RESIZE_COLUMN);
+//			ext2.setMaxWidthGuardDisabled(true);
 			hLayout.addComponents(field,gotoButton,saveButton);
 			hLayout.setComponentAlignment(gotoButton, Alignment.BOTTOM_LEFT);
 			hLayout.setComponentAlignment(saveButton, Alignment.BOTTOM_LEFT);
@@ -170,7 +171,6 @@ public class DemoUI extends UI {
 		}
 	}
 
-    
     @Override
     protected void init(VaadinRequest request) {
 

@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.extension</groupId>
 	<artifactId>GridScrollExtension-root</artifactId>
 	<packaging>pom</packaging>
-	<version>2.4.1</version>
+	<version>2.4.2</version>
 	<name>GridScrollExtension Add-on Root Project</name>
 
 	<prerequisites>
@@ -28,7 +28,7 @@
 			<repositories>
 				<repository>
 					<id>vaadin-prereleases</id>
-					<url>http://maven.vaadin.com/vaadin-prereleases</url>
+					<url>https://maven.vaadin.com/vaadin-prereleases</url>
 				</repository>
 				<repository>
 					<id>vaadin-snapshots</id>
@@ -44,7 +44,7 @@
 			<pluginRepositories>
 				<pluginRepository>
 					<id>vaadin-prereleases</id>
-					<url>http://maven.vaadin.com/vaadin-prereleases</url>
+					<url>https://maven.vaadin.com/vaadin-prereleases</url>
 				</pluginRepository>
 				<pluginRepository>
 					<id>vaadin-snapshots</id>

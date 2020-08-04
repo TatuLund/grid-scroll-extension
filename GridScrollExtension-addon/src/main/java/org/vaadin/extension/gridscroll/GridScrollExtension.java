@@ -34,7 +34,7 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	private Grid<T> grid;
 	private int lastWidth;
 	private int lastHeight;
-	private boolean restorePosition = true;	
+	private boolean restorePosition = true;
 	
 	/**
 	 * A listener interface for {@link GridScrolledEvent}
@@ -111,7 +111,7 @@ public class GridScrollExtension<T> extends AbstractExtension {
 				fireEvent(new GridColumnsResizedEvent<T>(grid,column));
 				// This is awful, but needed to overcome race condition with faulty 
 				// internal mechanics of the Grid
-				if (column != -1) {
+				if (!getState().widthGuardDisabled && column != -1) {
 					UI ui = UI.getCurrent();
 					Thread t = new Thread(() -> {
 						try {
@@ -418,5 +418,21 @@ public class GridScrollExtension<T> extends AbstractExtension {
      */
     public void setRestorePosition(boolean restorePosition) {
     	this.restorePosition = restorePosition;
+    }
+    
+    /**
+     * Disable width guard if true. By default the add-on will snap the column
+     * width back to its maximum or minimum size if dragged size exceeds it. 
+     * 
+     * Note, this option is given for those who do not use column minimum or 
+     * maximum widths. If disabled and minium / maximum widths present, column
+     * resizing may have problems.
+     * 
+     * @since 2.4.2
+     * 
+     * @param widthGuardDisabled True = disabled
+     */
+    public void setWidthGuardDisabled(boolean widthGuardDisabled) {
+    	getState().widthGuardDisabled  = widthGuardDisabled;
     }
 }

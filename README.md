@@ -51,6 +51,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.4.2
+- Added a method to disable widths guard feature, GridScrollExtension#setWidthGuardDisabled(boolean)
+
 ### Version 2.4.1
 - Fixing possible issue with undefined column widths
 

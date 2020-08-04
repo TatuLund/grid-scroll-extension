@@ -46,9 +46,13 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 		for (int i=0;i<columns;i++) {
 			widths[i] = grid.getVisibleColumns().get(i).getWidthActual();
 			double maxWidth = grid.getVisibleColumns().get(i).getMaximumWidth();
-			if (widths[i] > maxWidth && maxWidth > 0) {
+			double minWidth = grid.getVisibleColumns().get(i).getMinimumWidth();
+			if (!getState().widthGuardDisabled && widths[i] > maxWidth && maxWidth > 0) {
 				widths[i] =  maxWidth;
 				grid.getVisibleColumns().get(i).setWidth(maxWidth);
+			} else if (!getState().widthGuardDisabled && widths[i] < minWidth && minWidth > 0) {
+				widths[i] =  minWidth;
+				grid.getVisibleColumns().get(i).setWidth(minWidth);
 			}
 		}
 		return widths;
