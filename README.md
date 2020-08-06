@@ -51,6 +51,10 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.4.3
+- Fixed bug with hidden columns
+- Made delayed column snapping thread safe
+
 ### Version 2.4.2
 - Added a method to disable widths guard feature, GridScrollExtension#setWidthGuardDisabled(boolean)
 

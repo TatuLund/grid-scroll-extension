@@ -32,7 +32,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 	private int heigth = -1;
 	Timer t = null;
 	int visibleColIndex = -1;
-	
+
 	private double[] getColumnWidths() {
 		int columns = grid.getVisibleColumns().size();
 		double[] widths = new double[columns]; 
@@ -287,7 +287,7 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 					double[] widths = getColumnWidthsCapped();
 					double adjustedWidth = adjustLastColumnWidth(widths);
 					if (visibleColIndex == grid.getVisibleColumns().size()-1) widths[visibleColIndex] = adjustedWidth;
-					getServerRPC().reportColumns(widths,visibleColIndex);						
+					getServerRPC().reportColumns(widths,visibleColIndex);
 				}
 			});
 		}

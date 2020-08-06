@@ -35,6 +35,7 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	private int lastWidth;
 	private int lastHeight;
 	private boolean restorePosition = true;
+	private UI ui;
 	
 	/**
 	 * A listener interface for {@link GridScrolledEvent}
@@ -88,7 +89,10 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	public GridScrollExtension(Grid<T> grid) {
 		this.extend(grid);
 		this.grid = grid;
+
 		registerRpc(new GridScrollExtensionServerRPC() {
+
+			private int realColumn;
 
 			@Override
 			public void ping() {
@@ -111,8 +115,15 @@ public class GridScrollExtension<T> extends AbstractExtension {
 				fireEvent(new GridColumnsResizedEvent<T>(grid,column));
 				// This is awful, but needed to overcome race condition with faulty 
 				// internal mechanics of the Grid
-				if (!getState().widthGuardDisabled && column != -1) {
-					UI ui = UI.getCurrent();
+				if (ui != null && !getState().widthGuardDisabled && column != -1) {
+					realColumn = column;
+					int i = 0;
+					for (Column<T,?> col : grid.getColumns()) {
+						if (i < column && col.isHidden()) {
+							realColumn++;
+						}
+						i++;
+					}
 					Thread t = new Thread(() -> {
 						try {
 							Thread.sleep(50);
@@ -120,9 +131,9 @@ public class GridScrollExtension<T> extends AbstractExtension {
 						}
 						ui.access(() -> {
 							if (widths[column] < 0) {
-								grid.getColumns().get(column).setWidthUndefined();
-							} else { 
-								grid.getColumns().get(column).setWidth(widths[column]);
+								grid.getColumns().get(realColumn).setWidthUndefined();
+							} else {
+								grid.getColumns().get(realColumn).setWidth(widths[column]);
 							}
 						});
 					});
@@ -144,7 +155,12 @@ public class GridScrollExtension<T> extends AbstractExtension {
 		});
 	}
 	
-	
+	@Override
+	public void attach() {
+		super.attach();
+		ui = getUI();
+	}
+
 	/**
 	 * Add a new GridRenderedListener
 	 * The GridRenderedEvent event is fired once after Grid's initial column width calculation is complete

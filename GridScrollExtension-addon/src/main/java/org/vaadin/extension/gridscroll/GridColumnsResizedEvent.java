@@ -17,12 +17,22 @@ import com.vaadin.ui.Grid.Column;
  */
 @SuppressWarnings("serial")
 public class GridColumnsResizedEvent<T> extends CustomComponent.Event {
-	private int column;
+	private int realColumn;
 	private Grid<T> grid;
 	
 	public GridColumnsResizedEvent(Grid<T> source, int column) {
 		super(source);
 		grid = source;
+		realColumn = column;
+		int i = 0;
+		if (column != -1) {
+			for (Column<T,?> col : grid.getColumns()) {
+				if (i < column && col.isHidden()) {
+					realColumn++;
+				}
+				i++;
+			}		
+		}
 	}
 
 	/**
@@ -33,11 +43,7 @@ public class GridColumnsResizedEvent<T> extends CustomComponent.Event {
 	 * @return Index of the column, -1 if there was no user originated resizing
 	 */
 	public int getColumn() {
-		int colIndex = column;
-		for (Column<T, ?> col : grid.getColumns()) {
-			if (col.isHidden()) colIndex++;
-		}
-		return colIndex;
+		return realColumn;
 	}
 
 }

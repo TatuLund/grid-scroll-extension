@@ -88,7 +88,7 @@ public class DemoUI extends UI {
 				for (Column col : grid1.getColumns()) col.setWidth(200.0d);
 				ext1.adjustGridWidth();
 			});
-			
+
 			ext1.setColumnResizeCompensationMode(ColumnResizeCompensationMode.RESIZE_GRID);
 			
 			ext1.addGridRenderedListener(event -> {
