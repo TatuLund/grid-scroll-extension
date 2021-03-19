@@ -51,6 +51,10 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.5.0
+- Improved robustness of getColumnWidth methods
+- Rebuild for not to give warnings due deprecated listener use with Vaadin 8.12.0
+
 ### Version 2.4.3
 - Fixed bug with hidden columns
 - Made delayed column snapping thread safe
