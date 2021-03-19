@@ -1,6 +1,7 @@
 package org.vaadin.extension.gridscroll;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import org.vaadin.extension.gridscroll.shared.ColumnResizeCompensationMode;
 import org.vaadin.extension.gridscroll.shared.GridScrollExtensionClientRPC;
@@ -243,11 +244,12 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 * 
 	 * @since 2.1.0
 	 * 
-	 * @param column The column reference
-	 * @return Actual width of the column in pixels double value
+	 * @param column The column reference, not null
+	 * @return Actual width of the column in pixels double value, -1.0 if column not found or widths not reported
 	 */
 	public double getColumnWidth(Column<?,?> column) {
-		double width = 0;
+		Objects.requireNonNull(column,"column cannot be null");
+		double width = -1.0;
 		int i = 0;
 		if (columnWidths == null) return -1.0;
 		if (column.isHidden()) return -1.0;
@@ -264,15 +266,16 @@ public class GridScrollExtension<T> extends AbstractExtension {
 	 * 
 	 * @since 2.1.0
      *
-	 * @param columnId Id string / property name of the column
-	 * @return Actual width of the column in pixels double value
+	 * @param columnId Id string / property name of the column, not null
+	 * @return Actual width of the column in pixels double value, -1.0 if column not found or widths not reported
 	 */
 	public double getColumnWidth(String columnId) {
-		double width = 0;
+		Objects.requireNonNull(columnId,"columnId cannot be null");
+		double width = -1.0;
 		int i = 0;
 		if (columnWidths == null) return -1.0;
 		for (Column<?, ?> column : grid.getColumns()) {
-			if (column.getId().equals(columnId)) width = columnWidths[i];
+			if (column.getId() != null && column.getId().equals(columnId)) width = columnWidths[i];
 			i++;
 		}
 		return width;
