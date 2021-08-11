@@ -290,6 +290,14 @@ public class GridScrollExtensionConnector extends AbstractExtensionConnector {
 					getServerRPC().reportColumns(widths,visibleColIndex);
 				}
 			});
+		} else {
+			Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {					
+				@Override
+				public void execute() {
+					double[] widths = getColumnWidthsCapped();
+					getServerRPC().reportColumns(widths,visibleColIndex);			
+				}
+			});
 		}
 	}
 	
