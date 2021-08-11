@@ -51,6 +51,9 @@ Debugging client side code in the ComboBoxOpener-demo project:
  
 ## Release notes
 
+### Version 2.5.1
+- Fix: Column widths should be reported also when ColumnResizeCompensationMode is NONE.
+
 ### Version 2.5.0
 - Improved robustness of getColumnWidth methods
 - Rebuild for not to give warnings due deprecated listener use with Vaadin 8.12.0
